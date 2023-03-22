@@ -1,0 +1,46 @@
+h3 {
+    margin-top: 84px;
+    font-size: 24pt;
+}
+
+.reference {
+	bottom: 0%;
+    position: fixed;
+    font-size: small;
+}
+
+.bullet2 {
+	margin-left: 100px;
+	margin-top: -20px;
+	margin-bottom: 20px;
+	font-size: smaller;
+}
+
+.smallcode {
+	font-size: small !important;
+}
+
+a, a:visited {
+	color: #2FA4E7 !important;
+}
+
+.lt {
+	float: left;
+	width: 48%;
+}
+
+.rt {
+	float: right;
+	width: 48%;
+}
+
+th {
+    font-weight: normal;
+}
+
+
+img {
+  margin: auto;
+  display: block;
+}
+

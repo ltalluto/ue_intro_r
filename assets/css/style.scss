@@ -1,0 +1,24 @@
+---
+---
+
+@import "{{ site.theme }}";
+
+.wrapper {
+  max-width: 800px;
+}
+
+section {
+  max-width: 800px;
+}
+
+ul{
+  list-style-image:none;
+}
+
+section #title {
+    border: 0;
+    outline: none;
+    margin: 0 0 25px 0;
+    padding: 0 0 5px 0;
+}
+
