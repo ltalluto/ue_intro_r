@@ -1,7 +1,7 @@
 ---
 title: "Introduction to R"
 author: "Matthew Talluto"
-date: "23.03.2023"
+date: "21-22 Feb 2024"
 output:
   slidy_presentation:
     theme: cerulean
@@ -132,10 +132,20 @@ site_diversity = 8
 
 # error
 0y = 5
-my name = "Matt"
+todays date = "February 21"
 ```
 
 </div>
+
+
+## Data types
+
+* `numeric`: integers and floating-point (decimal) numbers
+* `logical`: yes/no, true/false data; in R represented by the special values `TRUE` and `FALSE`
+	- `T` and `F` (no quotes) can be used as shortcuts for `TRUE`/`FALSE`, but you should avoid this!
+* `character`: strings, text
+* `factor`: special variable type for categorical (nominal & ordinal) data
+
 
 
 
@@ -144,13 +154,11 @@ my name = "Matt"
 <div class="left lt">
 
 * We use **operators** to perform computations on variables and constants
-* The **numeric** data type is for numbers; we can perform basic math on them with mathematical operators
 * The **assignment operators** give a value to a variable
-
-
-* Assignment: `=`, `<-`
+	- `=`, `<-`
 	- Both work mostly the same, use alt dash (-) for `<-`
-* Math: `+`, `-`, `*`, `/`, `^`
+* **Mathematical operators** allow us to do arithmetic
+	- `+`, `-`, `*`, `/`, `^`
 </div>
 
 <div class="right rt">
@@ -232,38 +240,20 @@ log(x, base = 10)
 </div>
 
 <div class="right rt">
-
-```{r}
-# The c() function stands for concatenate
-# it groups items together into a vector
-(five_numbers = c(3, 2, 8.6, 4, 9.75))
-
-# math on vectors is performed on each element
-five_numbers + 1
-
-# vectors of other data types
-class(five_numbers)
-(five_letters = c("c", "b", "z", "q", "w"))
-class(five_letters)
-sort(five_letters)
-
-as(five_numbers, "integer")
-
-```
-
 </div>
 
 
 
 
-## Vectors: creation
+
+## Creating vectors
 
 <div class="left lt">
+* `c()` is a simple function that `c`oncatenates its arguments into a vector
 * The `:` operator creates a sequence of integers, counting by ones
 * More general sequences use the `seq` function
 	- Third argument tells you what to count by
 * Repeat values with `rep`
-
 </div>
 
 <div class="right rt">
@@ -285,8 +275,40 @@ rep(0, 3)
 
 
 ```
+</div>
+
+
+## Vectorized operations
+
+<div class="left lt">
+* Many of R's basic operators and functions are **vectorized**: they apply one-at-a-time to the whole vector.
+* Vectors can be other data types, and can be converted between data types.
+</div>
+
+<div class="right rt">
+
+```{r}
+
+# math on vectors is performed on each element
+five_numbers + 1
+five_numbers^2
+
+sin(five_numbers)
+
+# vectors of other data types
+class(five_numbers)
+(five_letters = c("c", "b", "z", "q", "w"))
+class(five_letters)
+sort(five_letters)
+
+as(five_numbers, "integer")
+
+```
 
 </div>
+
+
+
 
 
 
@@ -296,6 +318,7 @@ rep(0, 3)
 * We can use **indexing** to get a part of a vector by its position
 	- use the `[]` operator
 	- an index can be multiple values!
+	- any legal **expression** that returns integers can be used inside `[]`!
 * In R, the first index is always 1
 * Asking for an index outside the allowable range is an error
 
@@ -348,180 +371,6 @@ log(five_numbers)
 </div>
 
 
-## Reading in real data
-
-Download the [Palmer penguins dataset](https://raw.githubusercontent.com/allisonhorst/palmerpenguins/main/inst/extdata/penguins.csv)
-
-Save this in your project folder, inside another folder named `data`
-
-
-```{r penguins, echo=FALSE, fig.align = "left", out.width="35%"}
-knitr::include_graphics("img/lter_penguins.png")
-```
-
-<font size=4>Artwork by @allison_horst</font>
-
-## Reading in real data
-
-<div class="left lt">
-* The `read.csv` function takes a file path or URL as the argument
-* Returns a tabular data structure called a `data.frame`
-* `"data/penguins.csv"` is a **relative path**. 
-	- R will search inside the working directory for a folder named `"data"`.
-* An **absolute path** gives the location on your computer, starting from the very top. Example:
-
-`"/Users/mtalluto/Desktop/intro_r/data/penguins.csv"`
-
-**Recommendation**: use relative paths!
-
-*Hint: use `..` to refer to one directory above the current (working) directory*
-
-</div>
-
-
-<div class="right rt">
-
-```{r}
-penguins = read.csv("data/penguins.csv")
-# read.csv also takes URLs!
-# penguins = read.csv("https://raw.githubusercontent.com/allisonhorst/palmerpenguins/main/inst/extdata/penguins.csv")
-class(penguins)
-```
-
-
-</div>
-
-
-## Data prep recommendations
-<div class="left lt">
-
-* Prepare data in excel
-* The first row is a header with column names
-* Choose good column names (no spaces or special characters, include units)
-* In a separate file, describe the dataset, how it was collected, and the meaning of each column
-* Arrange your data so that each row is a single observation, each column is a variable ("tidy" data)
-
-</div>
-
-<div class="right rt">
-```{r echo = FALSE, results = 'asis'}
-kable_styling(kable(head(penguins)), font_size = 12)
-```
-</div>
-
-## Data Frames
-
-<div class="left lt">
-* A dataframe is a special kind of 2-dimensional data structure
-	* Rows represent **cases**
-	* Columns are **variables**
-* Each column is a vector and must follow vector rules
-	* each item must have the same data type
-* You can use `str` to see the structure of a dataframe, and `View` to open an interactive window
-* `head` will give you the first few rows
-</div>
-
-<div class="right rt">
-```{r}
-str(penguins)
-head(penguins)
-```
-
-
-</div>
-
-
-
-## Accessing parts of data frames
-
-<div class="left lt">
-* Extract a single column as a vector using the `$` operator
-	* Each column name is a variable that is visible only inside the `data.frame`!
-	* `$` lets you 'peek' inside
-
-</div>
-
-<div class="right rt">
-```{r eval = TRUE, error = TRUE}
-# I want the variable bill_length_mm
-# It is not visible by name
-bill_length_mm
-
-# get the variable from inside penguins
-penguins$bill_length_mm
-```
-</div>
-
-## Accessing parts of data frames
-
-<div class="left lt">
-* Extract a single column as a vector using the `$` operator
-	* Each column name is a variable that is visible only inside the `data.frame`!
-	* `$` lets you 'peek' inside
-* More complex indexing is available with `[]`
-</div>
-
-<div class="right rt">
-```{r}
-# Get the first value in the third column
-penguins[1,3]
-
-# Get the whole third column, then use head to print the first six values
-head(penguins[,3])
-
-# First five values of columns 3 and 4
-penguins[1:5, c(3,4)]
-
-# Can also index by name
-penguins[1:5, c("bill_length_mm", "bill_depth_mm")]
-
-# Remove the first 300 rows
-penguins[-(1:300),]
-```
-</div>
-
-
-
-## Practise with data frames
-
-Read in the penguin data using `read.csv`. Store it in a variable named `penguins`. Then try to do the following.
-
-1. How many rows and columns are in the dataset? Use `dim`, `nrow`, and `ncol`.
-2. What is the output of `mean(penguins$bill_depth_mm)`? Why? What if you try `mean(penguins$bill_depth_mm, na.rm = TRUE)`? Check the help file by typing `?mean`. Does the same logic work for `sd`?
-3. How many penguins were captured in each year? Try the `table` function.
-4. You can use table with multiple columns of data. Try to find out how many of each species were captured in each year.
-	 - Hint: use `c()` inside `[]` to get multiple columns. See the previous slide.
-5. Add a new column called `body_mass_kg`, and compute the body mass, in kg instead of g.
-	- Hint: you can use `$` to create a new column by name
-
-## Practise with data frames
-
-```{r}
-## 1.
-# dim gives rows and columns, in that order
-nrow(penguins)
-ncol(penguins)
-dim(penguins)
-
-## 2.
-# there are missing values, so this doesn't work
-mean(penguins$bill_depth_mm)
-# adding na.rm = TRUE gives us what we expect
-mean(penguins$bill_depth_mm, na.rm = TRUE)
-sd(penguins$bill_depth_mm, na.rm = TRUE)
-
-## 3.
-table(penguins$year)
-
-## 4. 
-table(penguins[, c('species', 'year')])
-
-## 5.
-# nothing is printed! but the new column is created with the data already stored
-# can confirm by looking at the data frame with head
-penguins$body_mass_kg = penguins$body_mass_g / 1000
-head(penguins)
-```
 
 
 ## More programming: logic and comparison
@@ -587,39 +436,225 @@ FALSE | FALSE
 </div>
 
 
-## Logical subsets
+
+## Reading in real data
+
+Download the [Palmer penguins dataset](https://raw.githubusercontent.com/allisonhorst/palmerpenguins/main/inst/extdata/penguins.csv)
+
+Save this in your project folder, inside another folder named `data`
+
+
+```{r penguins, echo=FALSE, fig.align = "left", out.width="35%"}
+knitr::include_graphics("img/lter_penguins.png")
+```
+
+<font size=4>Artwork by @allison_horst</font>
+
+## Reading in real data
 
 <div class="left lt">
-* You can use a logical statement as an indexing variable!
+* The `read.csv` function takes a file path or URL as the argument
+* Returns a tabular data structure called a `data.frame`
+* `"data/penguins.csv"` is a **relative path**. 
+	- R will search inside the working directory for a folder named `"data"`.
+* An **absolute path** gives the location on your computer, starting from the very top. Example:
+
+`"/Users/ltalluto/Desktop/intro_r/data/penguins.csv"`
+
+**Recommendation**: use relative paths!
+
+*Hint: use `..` to refer to one directory above the current (working) directory*
+
 </div>
+
 
 <div class="right rt">
 
 ```{r}
-five_numbers
-
-# show me which entries are greater than 3
-five_numbers > 3
-
-# give me the values of five_numbers which are greater than three
-five_numbers[five_numbers > 3]
-
+penguins = read.csv("data/penguins.csv")
+# read.csv also takes URLs!
+# penguins = read.csv("https://raw.githubusercontent.com/allisonhorst/palmerpenguins/main/inst/extdata/penguins.csv")
+class(penguins)
 ```
+
 
 </div>
 
-## Logical subsets of data frames
+
+
+
+## Data prep recommendations
+<div class="left lt">
+
+* Prepare data in excel
+* The first row is a header with column names
+* Choose good column names (no spaces or special characters, include units)
+* In a separate file, describe the dataset, how it was collected, and the meaning of each column
+* Arrange your data so that each row is a single observation, each column is a variable ("tidy" data)
+
+</div>
+
+<div class="right rt">
+```{r echo = FALSE, results = 'asis'}
+kable_styling(kable(head(penguins)), font_size = 12)
+```
+</div>
+
+
+
+
+## Working with data frames
 
 <div class="left lt">
-* The `subset` function lets you easily take pieces of a data frame
-* The `%in%` operator lets you match multiple categories
+* A `data.frame` holds tabular data
+   - Each `row` of a data frame is a single **case** (i.e., an observation)
+   - Each `column` of a data frame is a single variable (i.e., a `vector`, all the same data type)
+* `head` shows the first few rows of a data frame
 
-* **Exercise**: use `subset` to compute the mean bill length and bill depth for Gentoo penguins
+</div>
+
+<div class="right rt">
+   
+```{r, results = "hide"}
+# Load a dataset named 'penguins' and convert it to a data frame
+# this dataset comes from a package, "palmerpenguins"
+data(penguins, package = "palmerpenguins")
+penguins = as.data.frame(penguins)
+head(penguins)
+```
+
+```{r echo = FALSE, results = 'asis'}
+kable_styling(kable(head(penguins)), font_size = 12)
+```
+
+
+
+</div>
+
+
+## Working with data frames
+
+* `View` shows the data frame in a graphical window (Or double-click the dataset in the `Environment` tab)
+* `str` gives you a summary of the **str**ucture of the data
+
+```{r}
+str(penguins)
+```
+
+* `nrow`, `ncol`, `dim` give you dimensions of the data frame
+
+```{r}
+# data frame dimensions
+nrow(penguins)
+ncol(penguins)
+dim(penguins)
+```
+
+
+
+
+
+
+## Working with data frames
+
+<div class="left lt">
+
+* Variable names are not visible in the global environment!
+* You must access them using `$` or `[]`, lets you 'peek' inside the data.frame and access variables there.
+
 </div>
 
 <div class="right rt">
 
-```{r eval = FALSE}
+```{r, error = TRUE}
+
+# Error: there is no variable with that name!
+bill_length_mm
+```
+
+```{r, results = "hide"}
+
+# accessing a variable by name
+penguins$bill_length_mm
+penguins[, 'bill_length_mm']
+```
+
+```{r}
+# equivalent: accessing a variable by position
+penguins[,3] # get every row in the third column
+```
+
+</div>
+
+
+
+
+## Working with data frames
+
+<div class="left lt">
+
+* Variable names are not visible in the global environment!
+* You must access them using `$` or `[]`, lets you 'peek' inside the data.frame and access variables there.
+
+</div>
+
+<div class="right rt">
+
+
+```{r}
+# accessing a variable by name, and subsetting rows
+penguins[1:10,"bill_length_mm"]
+```
+</div>
+
+
+## Subsetting data frames
+
+<div class="left lt">
+* More complex indexing is available with `[]`
+</div>
+
+<div class="right rt">
+```{r}
+# Get the first value in the third column
+penguins[1,3]
+
+# Get the whole third column, then use head to print the first six values
+head(penguins[,3])
+
+# First five values of columns 3 and 4
+penguins[1:5, c(3,4)]
+
+# Can also index by name
+penguins[1:5, c("bill_length_mm", "bill_depth_mm")]
+
+# Remove the first 300 rows
+penguins[-(1:300),]
+```
+</div>
+
+
+## Logical subsets
+
+* We can take a part of a `data.frame` or `vector` based on some condition
+* Easy to use, easy to read: Use the `subset` function
+
+```{r subset}
+# Return a data frame with only one species
+penguins_adelie = subset(penguins, species == "Adelie")
+head(penguins_adelie)
+
+```
+
+
+
+## Logical subsets
+
+* We can take a part of a `data.frame` or `vector` based on some condition
+* Easy to use, easy to read: Use the `subset` function
+* Select from multiple categories with the `%in%` operator
+
+```{r subset_2, eval = FALSE}
 # Try these, what do they do?
 subset(penguins, species == "Adelie" & sex == "Male" & year != 2007)
 
@@ -627,27 +662,69 @@ subset(penguins, species %in% c("Chinstrap", "Gentoo"))
 
 ```
 
-</div>
 
-## Logical subsets of data frames
+## Logical subsets
 
-<div class="left lt">
-* The `subset` function lets you easily take pieces of a data frame
-* The `%in%` operator lets you match multiple categories
+* We can take a part of a `data.frame` or `vector` based on some condition
+* Easy to use, easy to read: Use the `subset` function
+* Select from multiple categories with the `%in%` operator
+* Hard, but more flexible: use logical indices in `[]`
 
-* **Exercise**: use `subset` to compute the mean bill length and bill depth for Gentoo penguins
-</div>
+```{r subset_3}
+# get the body mass of all female penguins with a larger-than-average bill length
+penguins[penguins$sex == "female" & penguins$bill_length_mm > mean(penguins$bill_length_mm, na.rm = TRUE), "body_mass_g"]
+```
 
-<div class="right rt">
 
-```{r}
+
+## Practise with data frames
+
+Read in the penguin data using `read.csv`. Store it in a variable named `penguins`. Then try to do the following.
+
+1. How many rows and columns are in the dataset? Use `dim`, `nrow`, and `ncol`.
+2. What is the output of `mean(penguins$bill_depth_mm)`? Why? What if you try `mean(penguins$bill_depth_mm, na.rm = TRUE)`? Check the help file by typing `?mean`. Does the same logic work for `sd`?
+3. How many penguins were captured in each year? Try the `table` function.
+4. You can use table with multiple columns of data. Try to find out how many of each species were captured in each year.
+	 - Hint: use `c()` inside `[]` to get multiple columns. See the previous slide.
+5. Add a new column called `body_mass_kg`, and compute the body mass, in kg instead of g.
+	- Hint: you can use `$` to create a new column by name
+6. Use `subset` to compute the mean bill length and bill depth for Gentoo penguins
+
+## Practise with data frames
+
+```{r ex1}
+## 1.
+# dim gives rows and columns, in that order
+nrow(penguins)
+ncol(penguins)
+dim(penguins)
+
+## 2.
+# there are missing values, so this doesn't work
+mean(penguins$bill_depth_mm)
+# adding na.rm = TRUE gives us what we expect
+mean(penguins$bill_depth_mm, na.rm = TRUE)
+sd(penguins$bill_depth_mm, na.rm = TRUE)
+
+## 3.
+table(penguins$year)
+
+## 4. 
+table(penguins[, c('species', 'year')])
+
+## 5.
+# nothing is printed! but the new column is created with the data already stored
+# can confirm by looking at the data frame with head
+penguins$body_mass_kg = penguins$body_mass_g / 1000
+head(penguins)
+
+
+## 6.
 penguins_gentoo = subset(penguins, species == "Gentoo")
 mean(penguins_gentoo$bill_length_mm, na.rm = TRUE)
 mean(penguins_gentoo$bill_depth_mm, na.rm = TRUE)
 
 ```
-
-</div>
 
 
 
@@ -771,7 +848,7 @@ peng_box
 ## Summary statistics: practise
 <div class="left lt">
 
-```{r}
+```{r ex2_1}
 # Subset the data to look only at Adelie penguins.
 penguins_adelie = subset(penguins, species == "Adelie")
 
@@ -805,39 +882,15 @@ tapply(penguins_adelie$flipper_length_mm,
 ## Summary statistics: practise
 <div class="left lt">
 
-```{r}
-# Subset the data to look only at Adelie penguins.
-penguins_adelie = subset(penguins, species == "Adelie")
-
-# Does the distribution of flipper length of Adelie penguins vary
-# among the different islands?
-# we can use tapply with the different functions
-
-## mean
-tapply(penguins_adelie$flipper_length_mm, 
-	   penguins_adelie[, c('island', 'sex')], mean)
-
-## sd
-tapply(penguins_adelie$flipper_length_mm, 
-	   penguins_adelie[, c('island', 'sex')], sd)
-
-## median
-tapply(penguins_adelie$flipper_length_mm, 
-	   penguins_adelie[, c('island', 'sex')], median)
-
-## min
-tapply(penguins_adelie$flipper_length_mm, 
-	   penguins_adelie[, c('island', 'sex')], min)
-
-## max
-tapply(penguins_adelie$flipper_length_mm, 
-	   penguins_adelie[, c('island', 'sex')], max)
-
+```{r ex2_2, eval = FALSE}
+# a boxplot is a much nicer way to visualise this
+boxplot(flipper_length_mm ~ island+sex, data = penguins_adelie)
 ```
+
 </div>
 
 <div class="right rt">
-```{r}
+```{r ex2_plot1, echo = FALSE}
 # a boxplot is a much nicer way to visualise this
 boxplot(flipper_length_mm ~ island+sex, data = penguins_adelie)
 ```
@@ -848,39 +901,7 @@ boxplot(flipper_length_mm ~ island+sex, data = penguins_adelie)
 ## Summary statistics: practise
 <div class="left lt">
 
-```{r}
-# Subset the data to look only at Adelie penguins.
-penguins_adelie = subset(penguins, species == "Adelie")
-
-# Does the distribution of flipper length of Adelie penguins vary
-# among the different islands?
-# we can use tapply with the different functions
-
-## mean
-tapply(penguins_adelie$flipper_length_mm, 
-	   penguins_adelie[, c('island', 'sex')], mean)
-
-## sd
-tapply(penguins_adelie$flipper_length_mm, 
-	   penguins_adelie[, c('island', 'sex')], sd)
-
-## median
-tapply(penguins_adelie$flipper_length_mm, 
-	   penguins_adelie[, c('island', 'sex')], median)
-
-## min
-tapply(penguins_adelie$flipper_length_mm, 
-	   penguins_adelie[, c('island', 'sex')], min)
-
-## max
-tapply(penguins_adelie$flipper_length_mm, 
-	   penguins_adelie[, c('island', 'sex')], max)
-
-```
-</div>
-
-<div class="right rt">
-```{r}
+```{r ex2_3, eval = FALSE}
 # a boxplot is a much nicer way to visualise this
 # the defaults are quite ugly, let's improve things
 # I chose colours using colorbrewer
@@ -899,6 +920,31 @@ boxplot(flipper_length_mm ~ island+sex, data = penguins_adelie,
 # add a legend to the plot
 legend("topleft", legend = unique(penguins_adelie$island), 
 	   title = "Island", fill = cols, bty = 'n')
+
+```
+</div>
+
+<div class="right rt">
+```{r ex2_plot2, echo = FALSE}
+# a boxplot is a much nicer way to visualise this
+# the defaults are quite ugly, let's improve things
+# I chose colours using colorbrewer
+# https://colorbrewer2.org/#type=qualitative&scheme=Paired&n=7
+# 3 colors, one for each island
+cols = rep(c("#a6cee3", "#fb9a99", "#fdbf6f"), 2)
+boxplot(flipper_length_mm ~ island+sex, data = penguins_adelie, 
+		at = c(1.6,2,2.4,    3.6,4,4.4), # at controls x-location, allows grouping by sex
+		col = rep(cols, 2), # set the colours, repeated twice (female and male)
+		names = c("", "Female", "", "", "Male", ""), # labels under the boxes
+		xlab = "", ylab = "Flipper length (mm)", # set axis titles
+		bty = 'n', #disable the box around the plot
+		notch = TRUE,
+		boxwex = 0.3 # thinner boxes
+)
+# add a legend to the plot
+legend("topleft", legend = unique(penguins_adelie$island), 
+	   title = "Island", fill = cols, bty = 'n')
+
 ```
 </div>
 
@@ -1032,8 +1078,8 @@ barplot(tab, col = c("pink", "lightblue"))
 ## Comparing proportions: multiple variables
 
 <div class="left lt">
-* Perhaps the sex ratio varies by species
-* We can see if the variable `sex` is associated with the variable `species` using a **chi-squared test**.
+* Perhaps the the number of each species captured varies by year.
+* We can see if the variable `year` is associated with the variable `species` using a **chi-squared test**.
 * Use `table` and `barplot` for exploration.
 * Use `chisq.test` for the test
 
@@ -1123,7 +1169,8 @@ cor.test(penguins$bill_depth_mm, penguins$bill_length_mm )
 
 <div class="right rt">
 ```{r}
-cols = factor(penguins$species) # magic spell to give each species a different color
+# magic spell to give each species a different color
+cols = factor(penguins$species) 
 plot(penguins$bill_depth_mm, penguins$bill_length_mm,
 	 pch = 16, #dots instead of circles
 	 col = cols, xlab = "Bill depth (mm)", 
@@ -1196,8 +1243,318 @@ pl
 
 
 
+## Graphics in R
+
+R currently has two dominant graphical engines
+
+### Base graphics
+* Built in to R.
+* Simple to use
+* Relatively easy syntax
+* Plots usually need a lot of customization before they are finished
+
+### ggplot2
+* A package you must install.
+* More complex syntax
+* Produces publication-quality graphics with less customization needed.
+* Plots can be saved in a variable, with customization added as needed.
 
 
 
+
+## Histograms: show the distribution of a single variable
+
+<div class="left lt">
+```{r hist_base, fig.width=5, fig.height=5}
+hist(penguins$bill_depth_mm)
+```
+</div>
+
+<div class="right rt">
+```{r hist_ggplot, fig.width=5, fig.height=5}
+## do this once!
+# install.packages("ggplot2")
+
+## Once per session
+library("ggplot2")
+
+ggplot(penguins, aes(x = bill_depth_mm)) + geom_histogram()
+```
+</div>
+
+
+## Histograms: show the distribution of a single variable
+
+Defaults are not amazing, some improvements needed
+
+<div class="left lt">
+
+* `main = ""` disables the title
+* `xlab` and `ylab` control axis labels
+* `breaks` controls the number of bins in the histogram
+* `col` sets the color of the bars
+* `border` sets the color of the borders (`NA`: no border)
+
+```{r hist_base2null, fig.width=5, fig.height=5, eval = FALSE}
+hist(penguins$bill_depth_mm, main = "", xlab="Bill depth (mm)", 
+	 ylab = "Frequency", breaks = 20, col="#999999", border=NA)
+```
+</div>
+
+<div class="right rt">
+```{r hist_base2, fig.width=5, fig.height=5, echo = FALSE}
+hist(penguins$bill_depth_mm, main = "", xlab="Bill depth (mm)", 
+	 ylab = "Frequency", breaks = 20, col="#999999", border=NA)
+```
+</div>
+
+
+## Histograms: show the distribution of a single variable
+
+<div class="left lt">
+
+```{r hist_ggplot2null, fig.width=5, fig.height=5, eval = FALSE}
+ggplot(penguins, aes(x = bill_depth_mm)) + 
+	geom_histogram(bins = 20) + 
+	theme_minimal() + xlab("Bill depth (mm)")
+```
+</div>
+
+<div class="right rt">
+```{r hist_ggplot2, fig.width=5, fig.height=5, echo = FALSE}
+ggplot(penguins, aes(x = bill_depth_mm)) + 
+	geom_histogram(bins = 20) + 
+	theme_minimal() + xlab("Bill depth (mm)")
+```
+</div>
+
+## Colours
+
+<div class="left lt">
+* R supports colours using the common HTML color coding: `#RRGGBB`
+	- RR, GG, BB are the amounts of red, green, and blue
+	- each ranges from `00` (none) to `FF` (most)
+	- [Colour pickers](https://www.w3schools.com/colors/colors_picker.asp) online help you translate a color in real life to a coded color
+* Best practise: choose colours using reputable packages based in colour theory
+	- Continuous data: [scico](https://github.com/thomasp85/scico) and [viridis](https://github.com/sjmgarnier/viridis) are the best.
+	- Categorical data: [rcolorbrewer](https://colorbrewer2.org/#type=sequential&scheme=BuGn&n=3) is simple, limited palettes, [iWantHue](https://medialab.github.io/iwanthue/) generates custom categorical palettes
+* R also has 657 named colours: `col = 'rosybrown'`
+* see the `colors()` function for the names
+* You can use the `scales` package to generate custom palettes.
+
+```{r}
+head(colors())
+```
+</div>
+
+<div class="right rt">
+
+```{r echo = FALSE, fig.width=8, fig.height=4}
+library(ggdark)
+d = expand.grid(xl = 1:27, yb = 25:1)
+d$colors = NA
+d$colors[1:657] = colors()
+d = d[complete.cases(d),]
+par(mar = c(0,0,0,0))
+plot(0,0, xlim = c(1,28), ylim = c(1,26), type = 'n', axes = FALSE, xlab = "", ylab = "")
+with(d, rect(xl, yb, 1+xl, 1+yb, col = colors, border = NA))
+with(d, text(xl, yb + 0.5, colors, col = invert_color(colors), cex = 0.3, adj = 0))
+```
+
+</div>
+
+
+
+## Boxplot: distribution of a y-variable across categorical x-variables
+
+<div class="left lt">
+
+```{r boxplot_cols}
+library(RColorBrewer)
+(cols = brewer.pal(3, "Paired"))#[c(1, 5, 7)])
+```
+
+```{r boxplot, eval=FALSE}
+
+boxplot(flipper_length_mm ~ island+sex, data = penguins_adelie, 
+		# at controls x-location, allows grouping by sex
+		at = c(1.6,2,2.4,    3.6,4,4.4), 
+		# set the colours, repeated twice (female and male)
+		col = rep(cols, 2), 
+		# axis label text size
+		cex.axis = 0.8,
+		# labels under the boxes
+		names = c("", "Female", "", "", "Male", ""), 
+		# set axis titles
+		xlab = "", ylab = "Flipper length (mm)", 
+		# disable the box around the plot
+		bty = 'n', 
+		notch = TRUE,
+		# thinner boxes
+		boxwex = 0.3 
+)
+# add a legend to the plot
+legend("topleft", legend = unique(penguins_adelie$island), 
+	   title = "Island", fill = cols, bty = 'n')
+
+```
+</div>
+
+<div class="right rt">
+```{r boxplot_base, echo = FALSE, fig.width=5, fig.height=5}
+boxplot(flipper_length_mm ~ island+sex, data = penguins_adelie, 
+		at = c(1.6,2,2.4,    3.6,4,4.4), # at controls x-location, allows grouping by sex
+		col = rep(cols, 2), # set the colours, repeated twice (female and male)
+		cex.axis = 0.8, # axis label text size
+		names = c("", "Female", "", "", "Male", ""), # labels under the boxes
+		xlab = "", ylab = "Flipper length (mm)", # set axis titles
+		bty = 'n', #disable the box around the plot
+		notch = TRUE,
+		boxwex = 0.3 # thinner boxes
+)
+# add a legend to the plot
+legend("topleft", legend = unique(penguins_adelie$island), 
+	   title = "Island", fill = cols, bty = 'n')
+```
+</div>
+
+
+
+## Boxplot: distribution of a y-variable across categorical x-variables
+
+<div class="left lt">
+
+```{r boxplot2, eval = FALSE, fig.width=5, fig.height=5}
+ggplot(penguins_adelie, aes(y = flipper_length_mm, x = sex, 
+							fill = island)) + 
+	geom_boxplot(notch = TRUE) + 
+	theme_minimal() + ylab("Flipper length (mm)") + xlab("") +
+	scale_fill_brewer(palette = "Paired") 
+```
+
+</div>
+
+<div class="right rt">
+
+```{r boxplot_ggplot, echo = FALSE, fig.width=5, fig.height=5}
+ggplot(penguins_adelie, aes(y = flipper_length_mm, x = sex, fill = island)) + 
+	geom_boxplot(notch = TRUE) + 
+	theme_minimal() + ylab("Flipper length (mm)") + xlab("") +
+	scale_fill_brewer(palette = "Paired") 
+```
+
+</div>
+
+
+
+
+
+## Violin plot: boxplot alternative that shows more information
+
+<div class="left lt">
+
+```{r violin_plotnull, eval = FALSE, fig.width=5, fig.height=5}
+# another option!
+ggplot(penguins_adelie, aes(y = flipper_length_mm, x = sex, 
+							fill = island)) + 
+	geom_violin() + 
+	theme_minimal() + ylab("Flipper length (mm)") + xlab("") +
+	scale_fill_brewer(palette = "Paired") 
+```
+</div>
+
+<div class="right rt">
+
+```{r violin_plot, echo = FALSE, fig.width=5, fig.height=5}
+# another option!
+ggplot(penguins_adelie, aes(y = flipper_length_mm, x = sex, 
+							fill = island)) + 
+	geom_violin() + 
+	theme_minimal() + ylab("Flipper length (mm)") + xlab("") +
+	scale_fill_brewer(palette = "Paired") 
+```
+</div>
+
+
+## Tests of association: n × n Tables
+
+<div class="left lt">
+
+### Nesting holes of black-backed woodpeckers.
+
+```{r}
+woodpecker = read.csv("https://raw.githubusercontent.com/flee-group/vu_datenanalyse/main/datasets/woodpecker.csv")
+head(woodpecker)
+
+table(woodpecker)
+```
+
+We want to test for an *association* between the two variables (forest type and nest tree)
+
+</div>
+
+<div class="right rt">
+
+![](img/woodpecker.jpg){width=200px}
+
+$H_0$: Nesting tree is not associated with forest type
+
+$H_A$: Nest tree is associated with forest type
+
+</div>
+
+
+
+## Visualisation: Categorical Data
+
+<div class="left lt">
+
+Barplots, or proportional bars for counts within categories
+
+```{r, fig.show='hide'}
+table(woodpecker)
+
+woodp_plot = ggplot(woodpecker, aes(x = nest_tree,
+				fill = forest_type))
+woodp_plot = woodp_plot + geom_bar(width = 0.5, 
+					position=position_dodge())
+woodp_plot = woodp_plot + xlab("Nest Tree Type") +
+	theme_minimal() + labs(fill = "Forest Type")
+woodp_plot
+```
+
+Side-by-side bars allow us to compare all categories on equal footing. 
+
+</div>
+
+<div class="right rt">
+```{r, echo = FALSE}
+woodp_plot
+```
+</div>
+
+
+
+
+
+
+## Bivariate data
+
+### Visualisation
+
+The classic way to visualise is a **scatterplot**
+Show in ggplot how to divide data into margins
+
+```{r fig.height=4, fig.width=4}
+plot(flipper_length_mm ~ body_mass_g, data = penguins_adelie, pch=16, 
+     xlab = "Adelie Penguin Body Mass (g)", ylab = "Flipper Length (mm)", bty='n')
+```
+
+
+## Heatmaps
+
+Useful for showing 3 variables
+
+check ggplot cheatsheet (https://rstudio.github.io/cheatsheets/data-visualization.pdf) for more
 
 
