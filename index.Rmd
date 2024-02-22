@@ -1500,18 +1500,6 @@ barplot(tab, col = c("pink", "lightblue"))
 </div>
 
 
-## Comparing proportions: multiple variables
-
-<div class="left lt">
-* Perhaps the the number of each species captured varies by year.
-* We can see if the variable `year` is associated with the variable `species` using a **chi-squared test**.
-* Use `table` and `barplot` for exploration.
-* Use `chisq.test` for the test
-
-</div>
-
-
-
 
 ## Tests of association: n × n Tables
 
