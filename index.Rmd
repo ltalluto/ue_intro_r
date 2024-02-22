@@ -907,7 +907,7 @@ boxplot(flipper_length_mm ~ island+sex, data = penguins_adelie)
 # I chose colours using colorbrewer
 # https://colorbrewer2.org/#type=qualitative&scheme=Paired&n=7
 # 3 colors, one for each island
-cols = rep(c("#a6cee3", "#fb9a99", "#fdbf6f"), 2)
+cols = c("#a6cee3", "#fb9a99", "#fdbf6f")
 boxplot(flipper_length_mm ~ island+sex, data = penguins_adelie, 
 		at = c(1.6,2,2.4,    3.6,4,4.4), # at controls x-location, allows grouping by sex
 		col = rep(cols, 2), # set the colours, repeated twice (female and male)
@@ -931,7 +931,7 @@ legend("topleft", legend = unique(penguins_adelie$island),
 # I chose colours using colorbrewer
 # https://colorbrewer2.org/#type=qualitative&scheme=Paired&n=7
 # 3 colors, one for each island
-cols = rep(c("#a6cee3", "#fb9a99", "#fdbf6f"), 2)
+cols = c("#a6cee3", "#fb9a99", "#fdbf6f")
 boxplot(flipper_length_mm ~ island+sex, data = penguins_adelie, 
 		at = c(1.6,2,2.4,    3.6,4,4.4), # at controls x-location, allows grouping by sex
 		col = rep(cols, 2), # set the colours, repeated twice (female and male)
@@ -949,170 +949,387 @@ legend("topleft", legend = unique(penguins_adelie$island),
 </div>
 
 
-## Basic statistical tests
 
-* We saw with the box plot the syntax `y ~ x`
-* In R, this is called a **formula**
-* Read this as "y is modelled by x"
-* We can use this for many plots and basic statistical tests
 
-## Comparing means
+
+## Graphics in R
+
+R currently has two dominant graphical engines
+
+### Base graphics
+* Built in to R.
+* Simple to use
+* Relatively easy syntax
+* Plots usually need a lot of customization before they are finished
+
+### ggplot2
+* A package you must install.
+* More complex syntax
+* Produces publication-quality graphics with less customization needed.
+* Plots can be saved in a variable, with customization added as needed.
+
+
+
+
+## Histograms: show the distribution of a single variable
 
 <div class="left lt">
-* Hypothesis: in Gentoo penguins, males are heavier than females
-* Exercise: test this hypothesis with the function `t.test`
-
-</div>
-
-<div class="right rt">
-```{r echo = FALSE}
-penguins_gentoo = subset(penguins, species == "Gentoo")
-pl = ggplot(penguins_gentoo) + geom_boxplot(aes(x = sex, y = body_mass_g, fill = sex)) + theme_minimal() + ggtitle("Gentoo penguins")
-pl
+```{r hist_base, fig.width=5, fig.height=5}
+hist(penguins$bill_depth_mm)
 ```
 </div>
 
-## Comparing means
+<div class="right rt">
+```{r hist_ggplot, fig.width=5, fig.height=5}
+## do this once!
+# install.packages("ggplot2")
+
+## Once per session
+library("ggplot2")
+
+ggplot(penguins, aes(x = bill_depth_mm)) + geom_histogram()
+```
+</div>
+
+
+## Histograms: show the distribution of a single variable
+
+Defaults are not amazing, some improvements needed
 
 <div class="left lt">
-* Hypothesis: in Gentoo penguins, males are heavier than females
-* Exercise: test this hypothesis with the function `t.test`
-* Add `paired = TRUE` for a paired t-test
+
+* `main = ""` disables the title
+* `xlab` and `ylab` control axis labels
+* `breaks` controls the number of bins in the histogram
+* `col` sets the color of the bars
+* `border` sets the color of the borders (`NA`: no border)
+
+```{r hist_base2null, fig.width=5, fig.height=5, eval = FALSE}
+hist(penguins$bill_depth_mm, main = "", xlab="Bill depth (mm)", 
+	 ylab = "Frequency", breaks = 20, col="#999999", border=NA)
+```
+</div>
+
+<div class="right rt">
+```{r hist_base2, fig.width=5, fig.height=5, echo = FALSE}
+hist(penguins$bill_depth_mm, main = "", xlab="Bill depth (mm)", 
+	 ylab = "Frequency", breaks = 20, col="#999999", border=NA)
+```
+</div>
+
+
+## Histograms: show the distribution of a single variable
+
+<div class="left lt">
+
+```{r hist_ggplot2null, fig.width=5, fig.height=5, eval = FALSE}
+ggplot(penguins, aes(x = bill_depth_mm)) + 
+	geom_histogram(bins = 20) + 
+	theme_minimal() + xlab("Bill depth (mm)")
+```
+</div>
+
+<div class="right rt">
+```{r hist_ggplot2, fig.width=5, fig.height=5, echo = FALSE}
+ggplot(penguins, aes(x = bill_depth_mm)) + 
+	geom_histogram(bins = 20) + 
+	theme_minimal() + xlab("Bill depth (mm)")
+```
+</div>
+
+## Colours
+
+<div class="left lt">
+* R supports colours using the common HTML color coding: `#RRGGBB`
+	- RR, GG, BB are the amounts of red, green, and blue
+	- each ranges from `00` (none) to `FF` (most)
+	- [Colour pickers](https://www.w3schools.com/colors/colors_picker.asp) online help you translate a color in real life to a coded color
+* Best practise: choose colours using reputable packages based in colour theory
+	- Continuous data: [scico](https://github.com/thomasp85/scico) and [viridis](https://github.com/sjmgarnier/viridis) are the best.
+	- Categorical data: [rcolorbrewer](https://colorbrewer2.org/#type=sequential&scheme=BuGn&n=3) is simple, limited palettes, [iWantHue](https://medialab.github.io/iwanthue/) generates custom categorical palettes
+* R also has 657 named colours: `col = 'rosybrown'`
+* see the `colors()` function for the names
+* You can use the `scales` package to generate custom palettes.
 
 ```{r}
+head(colors())
+```
+</div>
+
+<div class="right rt">
+
+```{r echo = FALSE, fig.width=8, fig.height=4}
+library(ggdark)
+d = expand.grid(xl = 1:27, yb = 25:1)
+d$colors = NA
+d$colors[1:657] = colors()
+d = d[complete.cases(d),]
+par(mar = c(0,0,0,0))
+plot(0,0, xlim = c(1,28), ylim = c(1,26), type = 'n', axes = FALSE, xlab = "", ylab = "")
+with(d, rect(xl, yb, 1+xl, 1+yb, col = colors, border = NA))
+with(d, text(xl, yb + 0.5, colors, col = invert_color(colors), cex = 0.3, adj = 0))
+```
+
+</div>
+
+
+
+
+## Basic statistics: comparing means
+
+
+* Hypothesis: in Gentoo penguins, males are heavier than females
+* We can formally test this using `t.test`
+
+```{r gentoo_mean}
 penguins_gentoo = subset(penguins, species == "Gentoo")
 tapply(penguins_gentoo$body_mass_g, penguins_gentoo$sex, mean)
-# why less??
+```
+
+
+
+
+
+## Comparing means: more than 2 groups
+
+* We can use the function `aov` to do an analysis of variance when there are more than 2 groups or when there are more than two **factors**.
+* Hypothesis 1: Average body mass varies by species
+* Hypothesis 2: Average body mass varies by both species **and** sex
+
+
+
+
+
+## Exercise: comparing means
+
+### Hypothesis 1: in Gentoo penguins, males are heavier than females
+
+1. Try to visualise the distribution of body masses in males and females using histograms. Does it look like there is a difference?
+2. Use `t.test` to test the hypothesis. Check the help file to get started.
+
+
+
+### Hypotheses 2 & 3
+
+* Hypothesis 2: Average body mass varies by species
+* Hypothesis 3: Average body mass varies by both species **and** sex
+
+1. Create a boxplot (or try a violin plot using `geom_violin`) visualising the differences in body mass among these 2 different factor variables.
+2. Use `aov` to perform an analysis of variance for each hypothesis. What do you conclude?
+
+*Hints*
+
+* With boxplot, we used the **formula** syntax `y ~ x` (y is modelled by x). This also works with `t.test`!
+* Make sure you know which variety of test to do, and which hypothesis to test!
+* `aov` doesn't produce very nice output by itself. Try saving the result of `aov` in a variable and using `summary` on that variable.
+
+
+
+
+
+## Comparing 2 histograms
+
+<div class="left lt">
+**Base graphics**
+
+Easiest just to do this in 2 panels. I set the axis limits so we have a fair comparison.
+
+
+```{r gentoo_histnull, eval = FALSE}
+# create a multipanel figure, organised by rows, with 1 row and 2 colums
+par(mfrow = c(1,2))
+hist(subset(penguins_gentoo, sex == "female")$body_mass_g, 
+	 main = "Female Gentoo", col = 'pink', 
+	 border = NA, xlab = "Body Mass (g)", xlim = c(3800, 6500))
+hist(subset(penguins_gentoo, sex == "male")$body_mass_g, 
+	 main = "Male Gentoo", col = 'lightblue', 
+	 border = NA, xlab = "Body Mass (g)", xlim = c(3800, 6500))
+
+```
+</div>
+
+<div class="right rt">
+```{r gentoo_hist, echo = FALSE}
+# create a multipanel figure, organised by rows, with 1 row and 2 colums
+par(mfrow = c(1,2))
+hist(subset(penguins_gentoo, sex == "female")$body_mass_g, 
+	 main = "Female Gentoo", col = 'pink', 
+	 border = NA, xlab = "Body Mass (g)", xlim = c(3800, 6500))
+hist(subset(penguins_gentoo, sex == "male")$body_mass_g, 
+	 main = "Male Gentoo", col = 'lightblue', 
+	 border = NA, xlab = "Body Mass (g)", xlim = c(3800, 6500))
+
+```
+
+</div>
+
+## Comparing 2 histograms
+<div class="left lt">
+
+**GGplot**
+
+`ggplot` allows for fancier options
+
+```{r gentoo_histggnull, eval = FALSE}
+ggplot(penguins_gentoo, aes(x = body_mass_g, fill = sex)) + 
+	geom_histogram(bins = 20, alpha = 0.8, position = "identity") + 
+	theme_minimal() + xlab("Body Mass (g)") +
+	scale_fill_manual("sex", values = c("pink", "lightblue"))
+```
+</div>
+
+<div class="right rt">
+```{r gentoo_histgg, echo = FALSE}
+ggplot(penguins_gentoo, aes(x = body_mass_g, fill = sex)) + 
+	geom_histogram(bins = 20, alpha = 0.8, position = "identity") + 
+	theme_minimal() + xlab("Body Mass (g)") +
+	scale_fill_manual("sex", values = c("pink", "lightblue"))
+```
+</div>
+
+## Running a t.test
+<div class="left lt">
+
+* Hypothesis: in Gentoo penguins, males are heavier than females
+	* Why `alternative = "less"`?
+* Conclusion?
+
+```{r gentoo_ttnu, eval = FALSE}
 t.test(body_mass_g ~ sex, data = penguins_gentoo, alternative = "less")
+```
+</div>
+
+<div class="right rt">
+```{r gentoo_tt, echo = FALSE}
+t.test(body_mass_g ~ sex, data = penguins_gentoo, alternative = "less")
+```
+</div>
+
+
+
+
+
+
+
+## Boxplot: distribution of a y-variable across categorical x-variables
+
+<div class="left lt">
+
+```{r boxplot_cols}
+library(RColorBrewer)
+(cols = brewer.pal(3, "Paired"))#[c(1, 5, 7)])
+```
+
+```{r boxplot, eval=FALSE}
+
+boxplot(body_mass_g ~ species+sex, data = penguins, 
+		# at controls x-location, allows grouping by sex
+		at = c(1.6,2,2.4,    3.6,4,4.4), 
+		# set the colours, repeated twice (female and male)
+		col = rep(cols, 2), 
+		# axis label text size
+		cex.axis = 0.8,
+		# labels under the boxes
+		names = c("", "Female", "", "", "Male", ""), 
+		# set axis titles
+		xlab = "", ylab = "Body mass (g)", 
+		# disable the box around the plot
+		bty = 'n', 
+		notch = TRUE,
+		# thinner boxes
+		boxwex = 0.3 
+)
+# add a legend to the plot
+legend("topleft", legend = unique(penguins$species), 
+	   title = "Species", fill = cols, bty = 'n')
 
 ```
 </div>
 
 <div class="right rt">
-```{r echo = FALSE}
-pl
+```{r boxplot_base, echo = FALSE, fig.width=5, fig.height=5}
+boxplot(body_mass_g ~ species+sex, data = penguins, 
+		# at controls x-location, allows grouping by sex
+		at = c(1.6,2,2.4,    3.6,4,4.4), 
+		# set the colours, repeated twice (female and male)
+		col = rep(cols, 2), 
+		# axis label text size
+		cex.axis = 0.8,
+		# labels under the boxes
+		names = c("", "Female", "", "", "Male", ""), 
+		# set axis titles
+		xlab = "", ylab = "Body mass (g)", 
+		# disable the box around the plot
+		bty = 'n', 
+		notch = TRUE,
+		# thinner boxes
+		boxwex = 0.3 
+)
+# add a legend to the plot
+legend("topleft", legend = unique(penguins$species), 
+	   title = "Species", fill = cols, bty = 'n')
 ```
 </div>
 
 
-## Comparing means: more than 2 groups
+
+## Boxplots: useful for comparisons among multiple groups
 
 <div class="left lt">
-* We can use the function `aov` to do an analysis of variance when there are more than 2 groups
-* Hypothesis: For male Adelie penguins, there are differences in bill length on the different islands
-* By itself, the output of `aov` is not helpful. Try using the `summary` function on the output instead.
 
-
-</div>
-<div class="right rt">
-```{r echo = FALSE}
-penguins_adelie_m = subset(penguins, species == "Adelie" & sex == "male")
-pl = ggplot(penguins_adelie_m) + geom_boxplot(aes(x = island, y = bill_length_mm, fill = island)) + 
-	theme_minimal() + ggtitle("Male Adelie penguins")
-
-pl
-```
-</div>
-
-## Comparing means: more than 2 groups
-
-<div class="left lt">
-* We can use the function `aov` to do an analysis of variance when there are more than 2 groups
-* Hypothesis: For male Adelie penguins, there are differences in bill length on the different islands
-* By itself, the output of `aov` is not helpful. Try using the `summary` function on the output instead.
-
-```{r}
-penguins_adelie_m = subset(penguins, species == "Adelie" & sex == "male")
-tapply(penguins_adelie_m$bill_length_mm, penguins_adelie_m$island, mean)
-adelie_m_model = aov(bill_length_mm ~ island, data = penguins_adelie_m)
-summary(adelie_m_model)
-
+```{r boxplot2, eval = FALSE, fig.width=5, fig.height=5}
+ggplot(penguins, aes(y = body_mass_g, x = sex, 
+							fill = species)) + 
+	geom_boxplot(notch = TRUE) + 
+	theme_minimal() + ylab("Body Mass (g)") + xlab("") +
+	scale_fill_brewer(palette = "Paired") 
 ```
 
 </div>
 
 <div class="right rt">
-```{r echo = FALSE}
-pl
-```
-</div>
 
-
-## Comparing proportions
-
-<div class="left lt">
-* Is the sex ratio for Gentoo penguins significantly different from 0.5?
-* Use the `table` function to view the counts
-* Try `barplot` for visualising
-* Use `prop.test` for the significance test
-
-</div>
-
-
-
-## Comparing proportions
-
-<div class="left lt">
-* Is the sex ratio for Gentoo penguins significantly different from 0.5?
-* Use the `table` function to view the counts
-* Try `barplot` for visualising
-* Use `prop.test` for the significance test
-
-```{r}
-# save it in a variable so we can use the counts later
-tab = table(penguins_gentoo$sex)
-tab
-prop.test(tab)
-```
-</div>
-
-<div class="right rt">
-```{r echo = FALSE}
-barplot(tab, col = c("pink", "lightblue"))
-
+```{r boxplot_ggplot, echo = FALSE, fig.width=5, fig.height=5}
+ggplot(penguins, aes(y = body_mass_g, x = sex, 
+							fill = species)) + 
+	geom_boxplot(notch = TRUE) + 
+	theme_minimal() + ylab("Body Mass (g)") + xlab("") +
+	scale_fill_brewer(palette = "Paired") 
 ```
 
 </div>
 
 
-## Comparing proportions: multiple variables
+
+
+
+## Violin plot: boxplot alternative that shows more information
 
 <div class="left lt">
-* Perhaps the the number of each species captured varies by year.
-* We can see if the variable `year` is associated with the variable `species` using a **chi-squared test**.
-* Use `table` and `barplot` for exploration.
-* Use `chisq.test` for the test
 
-</div>
-
-
-
-## Comparing proportions: multiple variables
-
-<div class="left lt">
-* We could ask if the proportions of each species vary by year
-* We can see if the categorical variables `year` and `species` are associated using a **chi-squared test**.
-* Use `table` and `barplot` for exploration.
-* Use `chisq.test` for the test
-
-```{r}
-tab = table(penguins[, c('species', 'year')])
-tab
-chisq.test(penguins$species, penguins$year)
+```{r violin_plotnull, eval = FALSE, fig.width=5, fig.height=5}
+# another option!
+ggplot(penguins, aes(y = body_mass_g, x = sex, 
+							fill = species)) + 
+	geom_violin() + 
+	theme_minimal() + ylab("Body Mass (g)") + xlab("") +
+	scale_fill_brewer(palette = "Paired") 
 ```
 </div>
 
 <div class="right rt">
 
-```{r}
-cols = c("#386cb0", "#ffff99", "#beaed4")
-# we change the y limit to make enough room for the legend
-barplot(tab, beside = TRUE, col = cols, ylim = c(0, 60))
-# sort the species so the colors line up right
-species = sort(unique(penguins$species))
-legend("topleft", legend = species, bty = "n", fill = cols)
+```{r violin_plot, echo = FALSE, fig.width=5, fig.height=5}
+# another option!
+ggplot(penguins, aes(y = body_mass_g, x = sex, 
+							fill = species)) + 
+	geom_violin() + 
+	theme_minimal() + ylab("Body Mass (g)") + xlab("") +
+	scale_fill_brewer(palette = "Paired") 
 ```
 </div>
+
+
 
 
 
@@ -1243,237 +1460,57 @@ pl
 
 
 
-## Graphics in R
-
-R currently has two dominant graphical engines
-
-### Base graphics
-* Built in to R.
-* Simple to use
-* Relatively easy syntax
-* Plots usually need a lot of customization before they are finished
-
-### ggplot2
-* A package you must install.
-* More complex syntax
-* Produces publication-quality graphics with less customization needed.
-* Plots can be saved in a variable, with customization added as needed.
 
 
 
-
-## Histograms: show the distribution of a single variable
+## Comparing proportions
 
 <div class="left lt">
-```{r hist_base, fig.width=5, fig.height=5}
-hist(penguins$bill_depth_mm)
-```
-</div>
+* Is the sex ratio for Gentoo penguins significantly different from 0.5?
+* Use the `table` function to view the counts
+* Try `barplot` for visualising
+* Use `prop.test` for the significance test
 
-<div class="right rt">
-```{r hist_ggplot, fig.width=5, fig.height=5}
-## do this once!
-# install.packages("ggplot2")
-
-## Once per session
-library("ggplot2")
-
-ggplot(penguins, aes(x = bill_depth_mm)) + geom_histogram()
-```
 </div>
 
 
-## Histograms: show the distribution of a single variable
 
-Defaults are not amazing, some improvements needed
+## Comparing proportions
 
 <div class="left lt">
-
-* `main = ""` disables the title
-* `xlab` and `ylab` control axis labels
-* `breaks` controls the number of bins in the histogram
-* `col` sets the color of the bars
-* `border` sets the color of the borders (`NA`: no border)
-
-```{r hist_base2null, fig.width=5, fig.height=5, eval = FALSE}
-hist(penguins$bill_depth_mm, main = "", xlab="Bill depth (mm)", 
-	 ylab = "Frequency", breaks = 20, col="#999999", border=NA)
-```
-</div>
-
-<div class="right rt">
-```{r hist_base2, fig.width=5, fig.height=5, echo = FALSE}
-hist(penguins$bill_depth_mm, main = "", xlab="Bill depth (mm)", 
-	 ylab = "Frequency", breaks = 20, col="#999999", border=NA)
-```
-</div>
-
-
-## Histograms: show the distribution of a single variable
-
-<div class="left lt">
-
-```{r hist_ggplot2null, fig.width=5, fig.height=5, eval = FALSE}
-ggplot(penguins, aes(x = bill_depth_mm)) + 
-	geom_histogram(bins = 20) + 
-	theme_minimal() + xlab("Bill depth (mm)")
-```
-</div>
-
-<div class="right rt">
-```{r hist_ggplot2, fig.width=5, fig.height=5, echo = FALSE}
-ggplot(penguins, aes(x = bill_depth_mm)) + 
-	geom_histogram(bins = 20) + 
-	theme_minimal() + xlab("Bill depth (mm)")
-```
-</div>
-
-## Colours
-
-<div class="left lt">
-* R supports colours using the common HTML color coding: `#RRGGBB`
-	- RR, GG, BB are the amounts of red, green, and blue
-	- each ranges from `00` (none) to `FF` (most)
-	- [Colour pickers](https://www.w3schools.com/colors/colors_picker.asp) online help you translate a color in real life to a coded color
-* Best practise: choose colours using reputable packages based in colour theory
-	- Continuous data: [scico](https://github.com/thomasp85/scico) and [viridis](https://github.com/sjmgarnier/viridis) are the best.
-	- Categorical data: [rcolorbrewer](https://colorbrewer2.org/#type=sequential&scheme=BuGn&n=3) is simple, limited palettes, [iWantHue](https://medialab.github.io/iwanthue/) generates custom categorical palettes
-* R also has 657 named colours: `col = 'rosybrown'`
-* see the `colors()` function for the names
-* You can use the `scales` package to generate custom palettes.
+* Is the sex ratio for Gentoo penguins significantly different from 0.5?
+* Use the `table` function to view the counts
+* Try `barplot` for visualising
+* Use `prop.test` for the significance test
 
 ```{r}
-head(colors())
+# save it in a variable so we can use the counts later
+tab = table(penguins_gentoo$sex)
+tab
+prop.test(tab)
 ```
 </div>
 
 <div class="right rt">
+```{r echo = FALSE}
+barplot(tab, col = c("pink", "lightblue"))
 
-```{r echo = FALSE, fig.width=8, fig.height=4}
-library(ggdark)
-d = expand.grid(xl = 1:27, yb = 25:1)
-d$colors = NA
-d$colors[1:657] = colors()
-d = d[complete.cases(d),]
-par(mar = c(0,0,0,0))
-plot(0,0, xlim = c(1,28), ylim = c(1,26), type = 'n', axes = FALSE, xlab = "", ylab = "")
-with(d, rect(xl, yb, 1+xl, 1+yb, col = colors, border = NA))
-with(d, text(xl, yb + 0.5, colors, col = invert_color(colors), cex = 0.3, adj = 0))
 ```
 
 </div>
 
 
-
-## Boxplot: distribution of a y-variable across categorical x-variables
+## Comparing proportions: multiple variables
 
 <div class="left lt">
-
-```{r boxplot_cols}
-library(RColorBrewer)
-(cols = brewer.pal(3, "Paired"))#[c(1, 5, 7)])
-```
-
-```{r boxplot, eval=FALSE}
-
-boxplot(flipper_length_mm ~ island+sex, data = penguins_adelie, 
-		# at controls x-location, allows grouping by sex
-		at = c(1.6,2,2.4,    3.6,4,4.4), 
-		# set the colours, repeated twice (female and male)
-		col = rep(cols, 2), 
-		# axis label text size
-		cex.axis = 0.8,
-		# labels under the boxes
-		names = c("", "Female", "", "", "Male", ""), 
-		# set axis titles
-		xlab = "", ylab = "Flipper length (mm)", 
-		# disable the box around the plot
-		bty = 'n', 
-		notch = TRUE,
-		# thinner boxes
-		boxwex = 0.3 
-)
-# add a legend to the plot
-legend("topleft", legend = unique(penguins_adelie$island), 
-	   title = "Island", fill = cols, bty = 'n')
-
-```
-</div>
-
-<div class="right rt">
-```{r boxplot_base, echo = FALSE, fig.width=5, fig.height=5}
-boxplot(flipper_length_mm ~ island+sex, data = penguins_adelie, 
-		at = c(1.6,2,2.4,    3.6,4,4.4), # at controls x-location, allows grouping by sex
-		col = rep(cols, 2), # set the colours, repeated twice (female and male)
-		cex.axis = 0.8, # axis label text size
-		names = c("", "Female", "", "", "Male", ""), # labels under the boxes
-		xlab = "", ylab = "Flipper length (mm)", # set axis titles
-		bty = 'n', #disable the box around the plot
-		notch = TRUE,
-		boxwex = 0.3 # thinner boxes
-)
-# add a legend to the plot
-legend("topleft", legend = unique(penguins_adelie$island), 
-	   title = "Island", fill = cols, bty = 'n')
-```
-</div>
-
-
-
-## Boxplot: distribution of a y-variable across categorical x-variables
-
-<div class="left lt">
-
-```{r boxplot2, eval = FALSE, fig.width=5, fig.height=5}
-ggplot(penguins_adelie, aes(y = flipper_length_mm, x = sex, 
-							fill = island)) + 
-	geom_boxplot(notch = TRUE) + 
-	theme_minimal() + ylab("Flipper length (mm)") + xlab("") +
-	scale_fill_brewer(palette = "Paired") 
-```
-
-</div>
-
-<div class="right rt">
-
-```{r boxplot_ggplot, echo = FALSE, fig.width=5, fig.height=5}
-ggplot(penguins_adelie, aes(y = flipper_length_mm, x = sex, fill = island)) + 
-	geom_boxplot(notch = TRUE) + 
-	theme_minimal() + ylab("Flipper length (mm)") + xlab("") +
-	scale_fill_brewer(palette = "Paired") 
-```
+* Perhaps the the number of each species captured varies by year.
+* We can see if the variable `year` is associated with the variable `species` using a **chi-squared test**.
+* Use `table` and `barplot` for exploration.
+* Use `chisq.test` for the test
 
 </div>
 
 
-
-
-
-## Violin plot: boxplot alternative that shows more information
-
-<div class="left lt">
-
-```{r violin_plotnull, eval = FALSE, fig.width=5, fig.height=5}
-# another option!
-ggplot(penguins_adelie, aes(y = flipper_length_mm, x = sex, 
-							fill = island)) + 
-	geom_violin() + 
-	theme_minimal() + ylab("Flipper length (mm)") + xlab("") +
-	scale_fill_brewer(palette = "Paired") 
-```
-</div>
-
-<div class="right rt">
-
-```{r violin_plot, echo = FALSE, fig.width=5, fig.height=5}
-# another option!
-ggplot(penguins_adelie, aes(y = flipper_length_mm, x = sex, 
-							fill = island)) + 
-	geom_violin() + 
-	theme_minimal() + ylab("Flipper length (mm)") + xlab("") +
-	scale_fill_brewer(palette = "Paired") 
-```
-</div>
 
 
 ## Tests of association: n × n Tables
@@ -1501,6 +1538,8 @@ $H_0$: Nesting tree is not associated with forest type
 
 $H_A$: Nest tree is associated with forest type
 
+* Try `chisq.test` on these data.
+* Use `barplot` or `geom_bar` to visualise
 </div>
 
 
@@ -1533,28 +1572,5 @@ woodp_plot
 ```
 </div>
 
-
-
-
-
-
-## Bivariate data
-
-### Visualisation
-
-The classic way to visualise is a **scatterplot**
-Show in ggplot how to divide data into margins
-
-```{r fig.height=4, fig.width=4}
-plot(flipper_length_mm ~ body_mass_g, data = penguins_adelie, pch=16, 
-     xlab = "Adelie Penguin Body Mass (g)", ylab = "Flipper Length (mm)", bty='n')
-```
-
-
-## Heatmaps
-
-Useful for showing 3 variables
-
-check ggplot cheatsheet (https://rstudio.github.io/cheatsheets/data-visualization.pdf) for more
 
 
