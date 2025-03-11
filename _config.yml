@@ -1,4 +1,6 @@
+# theme: jekyll-theme-minimal
 theme: jekyll-theme-modernist
+# theme: jekyll-theme-leap-day
 
 title: Introduction to R
-description: UIBK, Summer 2023
+description: UIBK, Summer 2025

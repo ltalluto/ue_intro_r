@@ -1,0 +1,129 @@
+---
+title: "Introduction to R"
+author: "Lauren Talluto"
+date: "March 2025"
+output:
+  xaringan::moon_reader:
+    css: [default, ../assets/intro_r.css, "hygge"]
+    lib_dir: assets
+    seal: false
+    nature:
+      highlightStyle: monokai
+      highlightLines: true
+      countIncrementalSlides: false
+      beforeInit: "../macros.js"
+---
+
+class: title-slide, middle
+
+<style type="text/css">
+  .title-slide {
+    background-image: url('img/bg.jpg');
+    background-color: #23373B;
+    background-size: contain;
+    border: 0px;
+    background-position: 600px 0;
+    line-height: 1;
+  }
+</style>
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "##", dev="png", error = TRUE)
+library(knitr)
+library(kableExtra)
+```
+
+# Lecture 1
+
+<hr width="65%" align="left" size="0.3" color="orange"></hr>
+
+## Introduction to scientific computing
+
+<hr width="65%" align="left" size="0.3" color="orange" style="margin-bottom:40px;"></hr>
+
+.instructors[
+  **Introduction to R for Biologists** - Lauren Talluto
+]
+
+
+---
+
+# Course Introduction
+
+---
+
+# Why scientific computing?
+- Growth in big data applications, remote sensing, monitoring, sequencing
+- Computation enables analyses that were previously impossible (permutation tests, Bayesian statistics, next-gen sequencing)
+- Enables the creation by non-artists of **highly effective visualisations**
+
+---
+layout: true
+
+# Why/what is R?
+
+.rt30[
+.rt[
+[![R logo](img/Rlogo.svg)](https://cran.r-project.org)
+]]
+
+---
+class: .lt70
+
+- Open-source **domain-specific** language
+--
+
+- Scientific computing is built-in
+--
+
+- Large number of packages specifically oriented around statistics, data science, visualisation
+--
+
+- Standard language for statistics, and (to a lesser extent) bioinformatics
+--
+
+- Excellent tools for scientific communication
+	- *Rmarkdown* for websites, reports, presentations
+	- *Shiny* for webapps
+
+---
+layout: false
+
+# Course objectives
+
+- Who this course is for (beginners, people who want to brush up on skills)
+- What this course covers (programming concepts, how to use R to accomplish general tasks, basics of data science and scientific workflows, visualisation)
+- What it does not cover (statistical theory, advanced programming topics)
+
+
+---
+# Course Format
+
+- Grading, etc
+	- Participation in class, working on übungen
+	- Weekly submission of a group report on the exercises
+- Brief lectures to introduce general concepts (hopefully around 1 hour per session)
+- Structured exercises to get you coding in R
+---
+
+# Resources & Materials
+- Course web page
+- Recommended reading (web and physical books)
+- Getting help: stackoverflow.com, R help files, avoid chatGPT.
+- Advanced resoures: R4DS, Advanced R
+- You will need
+- (recommended): your own laptop (you can also use university computers)
+- Please expect to work at least 1 hour outside of class for each hour in class
+
+---
+
+# Introduction to programming
+
+---
+
+# Organising scientific projects
+
+Copy a bit this one:
+https://intro2r.com/images/directory_structure.png
+
+File names - letters, numbers, underscores ONLY

@@ -1,0 +1,99 @@
+---
+title: "Exercise Set 1: Introduction to R"
+date: "14 March 2025"
+output: 
+  html_document:
+    self_contained: true
+    css: ex.css
+    mathjax: https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Guidelines
+
+Below you will find a few tasks. Work through them at your own pace, and produce a document answering the questions presented. You should hand this in in Word/Open Office/PDF format, and this document should include minimal code (unless specifically requested). Rather, answer the questions in complete sentences. If you are asked for a figure, embed it in the document. If a question requires **only** code, you can still include it in this document with a note like "See code appendix."
+
+You will upload **one** Word/PDF document per day of the course, along with a code appendix. To make the code appendix, see the instructions in question 1 below. You are welcome/encouraged to work in teams (max two students per team), if you do so please turn in a single assignment on OLAT and put both names on the PDF/Word file and in the code.
+
+It is expected that you will be able to finish these during class, but if you need extra time, the assignments are always due one day after we work on them in class.
+
+### Code Organisation and Style
+
+You should write a separate self-contained script for each of the numbered questions below. You should name them with the number and something descriptive, and save them in your code folder. For example, to answer question 3 about a frog dataset, you might save the file as "R/3_frogs.R"
+
+Make sure you comment your code! Start each script with the date, your name, and a summary of the script does. You can also intersperse helpful comments throughout your code to remind yourself of what you are doing.
+
+### Figures
+
+Figures and tables should be as complete as you can make them, similar to what you would find in a published article. Obviously the expectation is that they will improve during the course as you learn more R. What this means: colours, if used, should enhance the figure and aid in understanding it (they should mean something, don't change colours for no reason). Font sizes should be readable. Axes should be clearly labeled and include units if appropriate. In your Word/PDF document, you should include a caption for every figure/table that describes what is shown in sufficient detail to make the figure stand alone. Titles are not necessary.
+
+### Task 1: Project organisation
+
+Create a workspace and Rstudio project for this course. You can do this in Rstudio by choosing File -> New Project, and then selecting New Directory. Give it an appropriate name, e.g. "intro_r".
+
+1a. To keep your project organised, create a folder structure inside your project. This can be anything that makes sense for you, but at a minimum should contain a folder for data, a folder for code, and a folder for your results. 
+
+Also remember to include a `readme.txt` (or `.md` if you want to use markdown) file at the top level of your project. This should include: Your name, the date the project was started, the project title, a brief description of the project. It's also a good practise to include the version of R you are using in the project description.
+
+**Hint**: some people find it useful to have a different code folder for each day in the couse, e.g. "r_day1", "r_day2", etc.
+
+**To hand in code each day**: You should send your entire project. Outside R, find the project folder, zip it, and upload the .zip file to OLAT.
+
+### Task 2: Reading a local file
+
+Download the `coral_fish.csv` dataset from OLAT, and save it in the data folder in your project.
+
+This is a dataset of fish species richness (i.e., the total number of species) for a number of tropical and subtropical coral reefs in the Atlantic Ocean.
+
+2a. Use the `read.csv()` function to load the dataset. Look over the dataset in the viewer (you can use the `View()` function).
+
+2b. The dataset needs some cleaning. Inspect the data in R to find if there are any obvious problems. What issues did you find? How did you find them?
+
+2c. Use R to handle the problematic cases. How did you deal with them? Save a new cleaned copy of the dataset (do not overwrite the original data!) using the `write.csv()` function.
+
+2d. Inspect the data graphically. Using the cleaned dataset, use the `hist()` function to create a histogram. You can look at the help file to hist to see if you want to change any of the defaults.
+
+**Hints**: You might consider creating separate histograms for tropical and subtropical reefs.
+
+You can save the histogram to your disk using the `pdf()` and `dev.off()` functions:
+
+```{r eval=FALSE}
+# change the name to whatever you want, and don't forget to include a folder name!
+# use ?pdf to see the help file, experiment with changing the defaults
+pdf("filename.pdf") 
+
+# replace ... with whatever arguments the hist function requires
+hist(...)
+
+# tells R that the figure is done and it's ok to save
+dev.off() 
+```
+
+### Task 3:
+The `read.csv()` function can also download data from the internet! Use it like so to get the next dataset:
+
+```{r eval = FALSE}
+# remember you need to save the dataset into a variable!
+read.csv("https://raw.githubusercontent.com/allisonhorst/palmerpenguins/refs/heads/main/inst/extdata/penguins.csv")
+```
+
+This is the [Palmer Penguins dataset](https://allisonhorst.github.io/palmerpenguins/index.html), a freely available dataset consisting of information on the body measurements of three species of Penguin collected by Dr. Kristen Gorman at Palmer Station in Antartica.
+
+3a. **Data cleaning**. Inspect the data in R. The dataset contains a number of NAs. You might also inspect to make sure there are no other obvious issues. Use R to remove any rows that contain NAs, and then subset the data by to look at only Gentoo penguins. Save the cleaned/subsetted dataset in a .csv file on your computer.
+
+3b. How many rows are in the new dataset? How many males and females? How many from each island? What R function(s) did you use to answer this?
+
+3c. Compute some summary statistics for the variable `body_mass_g`. Does it make sense to compute summary statistics separately for different subsets of the data? If so, compute the statistics separately for each subset.
+
+Useful statistics include `mean`, `standard deviation`, the `minimum` and `maximum`, and the `standard error of the mean` (remember: standard error is $\frac{s}{\sqrt{n}}$). Many of these functions are on the cheat sheet. You can also search for a string using two question marks, e.g., `??"standard deviation" will search for help files that refer to the standard deviation. 
+
+3d. Inspect the data using bivariate scatterplots. Use `plot(x, y)`, where x and y are two vectors that you would like to plot against each other. Check out the help file for plot, use it to figure out how to change the x- and y-axis titles. You might try plotting one or two of the bill measurements on the `y` axis, with `body_mass_g` on the `x` axis. If you used subsets in 3c, also use them here, either by making a separate plot for each subset, or by plotting them together on the same plot using different colours.
+
+As with question 2, save these plots by putting the `plot` function between `pdf()` and `dev.off()`. I recommend you save yoru plots in a separate folder (e.g., the `output` or `results` folder).
+
+
+
