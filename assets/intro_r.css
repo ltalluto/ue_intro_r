@@ -4,9 +4,17 @@ body {
   font-family: 'Droid Serif', 'Palatino Linotype', 'Book Antiqua', Palatino, 'Microsoft YaHei', 'Songti SC', serif;
 }
 
+.lt100 {
+	float: left;
+	width: 98%;
+}
 .lt70 {
 	float: left;
 	width: 68%;
+}
+.lt50 {
+	float: left;
+	width: 48%;
 }
 
 .rt {
@@ -18,6 +26,18 @@ body {
 	width: 28%;
 }
 
+.image40 img {
+  width: 40%;
+}
+.image50 img {
+  width: 50%;
+}
+.image60 img {
+  width: 60%;
+}
+.image70 img {
+  width: 70%;
+}
 
 .remark-code, .remark-inline-code {
   font-family: 'Lucida Console', Monaco, monospace;

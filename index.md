@@ -50,8 +50,8 @@ Students will learn fundamental concepts of R programming, including the use of 
     <td class="tg-0pky">
       Introduction, Basic data manipulation
       Basic plots and summary statistics<br/>
-      Slides <br/>
-      Exercises <br/>
+      Slides • <a href="lec/1_intro.html">HTML</a> • <a href="lec/1_intro.pdf">PDF</a><br/>
+      <a href="ex/ex1_intro.html">Exercises</a><br/>
     </td>
   </tr>
  <tr style="border-bottom: double gray">

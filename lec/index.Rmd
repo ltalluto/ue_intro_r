@@ -20,6 +20,8 @@ library(kableExtra)
 
 ## Introduction to R
 
+### DONE
+
 * `R` is two things:
    1. A statistical programming language
    2. A software package implementing the R language (available at [https://cran.r-project.org/](https://cran.r-project.org/))
@@ -32,6 +34,7 @@ library(kableExtra)
 
 
 ## Setting up your workspace
+### DONE
 
 ### Step 1
 
@@ -44,6 +47,8 @@ library(kableExtra)
 
 ## Parts of Rstudio
 
+### DONE
+
 After launching Rstudio, create a new R **script** using the button in the upper left
 
 ![](img/rstudio_new_file.jpg){width=35%}
@@ -51,6 +56,8 @@ After launching Rstudio, create a new R **script** using the button in the upper
 **Script**: a text file where you will write an R-program. Commands in a script will be run in order, from the top to the bottom.
 
 ## Parts of Rstudio
+
+### DONE
 
 * The **editor** pane is where you will write your scripts. 
 * Commands here are not run automatically!
@@ -61,6 +68,8 @@ After launching Rstudio, create a new R **script** using the button in the upper
 $^1$Mac users: usually you can substitute the command (&#8984;) key for control, and option for alt
 
 ## Parts of Rstudio
+
+### DONE
 
 * The **console** pane is where commands are executed. 
 * Commands here can be sent from a script
@@ -74,6 +83,8 @@ $^1$Mac users: usually you can substitute the command (&#8984;) key for control,
 
 ## Helpful vocabulary
 
+### DONE
+
 * **console**: A window where you can type commands and view (text) results and output
 * **interpreter**: Software that translates R commands into instructions for your computer in real time
 * **script**: a text file containing a program, or series of commands
@@ -83,6 +94,9 @@ $^1$Mac users: usually you can substitute the command (&#8984;) key for control,
 
 
 ## Recommendations
+
+### DONE
+
 * Create an RStudio project to organize your work (File => New Project).
 	- Everyone do this now for this course!
 * Store all files in the project folder (your project will be **self-contained**).
@@ -94,6 +108,8 @@ $^1$Mac users: usually you can substitute the command (&#8984;) key for control,
 
 
 ## Variables
+
+### DONE
 
 <div class="left lt">
 * A **variable** is a name that points to some data. 
@@ -139,6 +155,7 @@ todays date = "February 21"
 
 
 ## Data types
+### DONE
 
 * `numeric`: integers and floating-point (decimal) numbers
 * `logical`: yes/no, true/false data; in R represented by the special values `TRUE` and `FALSE`
@@ -150,6 +167,7 @@ todays date = "February 21"
 
 
 ## Numeric operators
+### DONE
 
 <div class="left lt">
 
@@ -185,6 +203,8 @@ x + 2
 
 
 ## Functions
+
+### DONE
 
 <div class="left lt">
 * **Functions** take **arguments** (which can be variables or constants).
@@ -229,9 +249,12 @@ log(x, base = 10)
 </div>
 
 
+### DONE
 
 
 ## Data structures: vectors
+
+### DONE
 
 <div class="left lt">
 * A **data structure** is a way of organizing multiple pieces of data into a single variable
@@ -247,6 +270,7 @@ log(x, base = 10)
 
 
 ## Creating vectors
+### DONE
 
 <div class="left lt">
 * `c()` is a simple function that `c`oncatenates its arguments into a vector
@@ -279,6 +303,8 @@ rep(0, 3)
 
 
 ## Vectorized operations
+
+### DONE
 
 <div class="left lt">
 * Many of R's basic operators and functions are **vectorized**: they apply one-at-a-time to the whole vector.
@@ -313,6 +339,8 @@ as(five_numbers, "integer")
 
 
 ## Vectors: indexing
+
+### DONE
 
 <div class="left lt">
 * We can use **indexing** to get a part of a vector by its position
@@ -439,6 +467,8 @@ FALSE | FALSE
 
 ## Reading in real data
 
+### DONE
+
 Download the [Palmer penguins dataset](https://raw.githubusercontent.com/allisonhorst/palmerpenguins/main/inst/extdata/penguins.csv)
 
 Save this in your project folder, inside another folder named `data`
@@ -451,6 +481,7 @@ knitr::include_graphics("img/lter_penguins.png")
 <font size=4>Artwork by @allison_horst</font>
 
 ## Reading in real data
+### DONE
 
 <div class="left lt">
 * The `read.csv` function takes a file path or URL as the argument
@@ -484,6 +515,9 @@ class(penguins)
 
 
 ## Data prep recommendations
+
+### DONE
+
 <div class="left lt">
 
 * Prepare data in excel
