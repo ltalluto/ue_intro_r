@@ -1,6 +1,6 @@
 ---
 title: "Exercise Set 1: Introduction to R"
-date: "17 March 2025"
+date: "14 March 2025"
 output: 
   html_document:
     self_contained: true
@@ -73,8 +73,7 @@ hist(...)
 dev.off() 
 ```
 
-### Task 3: Reading data from the internet
-
+### Task 3:
 The `read.csv()` function can also download data from the internet! Use it like so to get the next dataset:
 
 ```{r eval = FALSE}
@@ -84,9 +83,7 @@ read.csv("https://raw.githubusercontent.com/allisonhorst/palmerpenguins/refs/hea
 
 This is the [Palmer Penguins dataset](https://allisonhorst.github.io/palmerpenguins/index.html), a freely available dataset consisting of information on the body measurements of three species of Penguin collected by Dr. Kristen Gorman at Palmer Station in Antartica.
 
-3a. **Data cleaning**. Inspect the data in R. The dataset contains a number of NAs. You might also inspect to make sure there are no other obvious issues. Use R to remove any rows that contain NAs. Save the edited data frame to your computer in "data/pengiuns.csv" using `write.csv()`.
-
-Next, subset the data to look at only Gentoo penguins. Save the subsetted dataset in a second .csv file on your computer.
+3a. **Data cleaning**. Inspect the data in R. The dataset contains a number of NAs. You might also inspect to make sure there are no other obvious issues. Use R to remove any rows that contain NAs, and then subset the data by to look at only Gentoo penguins. Save the cleaned/subsetted dataset in a .csv file on your computer.
 
 3b. How many rows are in the new dataset? How many males and females? How many from each island? What R function(s) did you use to answer this?
 

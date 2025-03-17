@@ -10,7 +10,7 @@
 
 
 
-<meta name="date" content="2025-03-14" />
+<meta name="date" content="2025-03-17" />
 
 <title>Exercise Set 1: Introduction to R</title>
 
@@ -351,7 +351,7 @@ display: none;
 
 
 <h1 class="title toc-ignore">Exercise Set 1: Introduction to R</h1>
-<h4 class="date">14 March 2025</h4>
+<h4 class="date">17 March 2025</h4>
 
 </div>
 
@@ -454,8 +454,8 @@ hist(...)
 # tells R that the figure is done and it&#39;s ok to save
 dev.off() </code></pre>
 </div>
-<div id="task-3" class="section level3">
-<h3>Task 3:</h3>
+<div id="task-3-reading-data-from-the-internet" class="section level3">
+<h3>Task 3: Reading data from the internet</h3>
 <p>The <code>read.csv()</code> function can also download data from the
 internet! Use it like so to get the next dataset:</p>
 <pre class="r"><code># remember you need to save the dataset into a variable!
@@ -467,8 +467,10 @@ collected by Dr. Kristen Gorman at Palmer Station in Antartica.</p>
 <p>3a. <strong>Data cleaning</strong>. Inspect the data in R. The
 dataset contains a number of NAs. You might also inspect to make sure
 there are no other obvious issues. Use R to remove any rows that contain
-NAs, and then subset the data by to look at only Gentoo penguins. Save
-the cleaned/subsetted dataset in a .csv file on your computer.</p>
+NAs. Save the edited data frame to your computer in “data/pengiuns.csv”
+using <code>write.csv()</code>.</p>
+<p>Next, subset the data to look at only Gentoo penguins. Save the
+subsetted dataset in a second .csv file on your computer.</p>
 <p>3b. How many rows are in the new dataset? How many males and females?
 How many from each island? What R function(s) did you use to answer
 this?</p>
