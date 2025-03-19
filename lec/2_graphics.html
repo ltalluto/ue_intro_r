@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Summary Statistics &amp; Base Graphics</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Lauren Talluto" />
+    <script src="assets/header-attrs-2.27/header-attrs.js"></script>
+    <link href="assets/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="assets/remark-css-0.0.1/hygge.css" rel="stylesheet" />
+    <link rel="stylesheet" href="../assets/intro_r.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+class: title-slide, middle
+
+&lt;style type="text/css"&gt;
+  .title-slide {
+    background-image: url('img/bg.jpg');
+    background-color: #23373B;
+    background-size: contain;
+    border: 0px;
+    background-position: 600px 0;
+    line-height: 1;
+  }
+&lt;/style&gt;
+
+
+
+# Lecture 2
+
+&lt;hr width="65%" align="left" size="0.3" color="orange"&gt;&lt;/hr&gt;
+
+## Summary Statistics &amp; Base Graphics
+
+&lt;hr width="65%" align="left" size="0.3" color="orange" style="margin-bottom:40px;"&gt;&lt;/hr&gt;
+
+.instructors[
+  **Introduction to R for Biologists** - Lauren Talluto
+]
+
+---
+
+# Summary Statistics in R
+
+### Helpful functions to try
+
+
+``` r
+penguins = read.csv("data/penguins.csv")
+y = penguins$body_mass_g
+
+summary(y)
+
+# minimum, maximum
+range(y)
+min(y)
+max(y)
+
+# central tendency
+mean(y)
+median(y)
+
+# variability
+var(y)
+sd(y)
+
+```
+
+---
+
+# Dealing with missing values
+
+The penguin dataset has some `NA` values. 
+
+Check the help functions: `?mean`. Do you see any option for dealing with NAs?
+
+.image80[![The help file for the mean function](img/meanhelp.png)]
+
+---
+layout:true
+# Removing missing values
+
+You can use `subset()` with `complete.cases()` to remove ALL rows that have at least one missing value.
+
+---
+
+
+``` r
+penguins = read.csv("data/penguins.csv")
+nrow(penguins)
+## [1] 344
+```
+
+``` r
+head(penguins)
+##   species    island bill_length_mm bill_depth_mm flipper_length_mm body_mass_g
+## 1  Adelie Torgersen           39.1          18.7               181        3750
+## 2  Adelie Torgersen           39.5          17.4               186        3800
+## 3  Adelie Torgersen           40.3          18.0               195        3250
+## 4  Adelie Torgersen             NA            NA                NA          NA
+## 5  Adelie Torgersen           36.7          19.3               193        3450
+## 6  Adelie Torgersen           39.3          20.6               190        3650
+##      sex year
+## 1   male 2007
+## 2 female 2007
+## 3 female 2007
+## 4   &lt;NA&gt; 2007
+## 5 female 2007
+## 6   male 2007
+```
+
+---
+
+
+``` r
+penguins_no_na = subset(penguins, complete.cases(penguins))
+nrow(penguins_no_na)
+## [1] 333
+```
+
+``` r
+head(penguins_no_na)
+##   species    island bill_length_mm bill_depth_mm flipper_length_mm body_mass_g
+## 1  Adelie Torgersen           39.1          18.7               181        3750
+## 2  Adelie Torgersen           39.5          17.4               186        3800
+## 3  Adelie Torgersen           40.3          18.0               195        3250
+## 5  Adelie Torgersen           36.7          19.3               193        3450
+## 6  Adelie Torgersen           39.3          20.6               190        3650
+## 7  Adelie Torgersen           38.9          17.8               181        3625
+##      sex year
+## 1   male 2007
+## 2 female 2007
+## 3 female 2007
+## 5 female 2007
+## 6   male 2007
+## 7 female 2007
+```
+---
+layout:false
+# Dealing with partitioned data
+
+Our data have meaningful partitions, especially by `species` and `sex`!
+
+Our summary statistics will make more sense if we compute them seperately by species/sex.
+
+
+``` r
+with(penguins_no_na,
+	plot(body_mass_g, bill_length_mm, col = factor(species), pch = 16)
+)
+```
+
+![](2_graphics_files/figure-html/plot_species-1.svg)&lt;!-- --&gt;
+
+---
+# Computing by partition, the slow way
+
+
+``` r
+mean(penguins_no_na$bill_length_mm[penguins_no_na$species == "Adelie"])
+## [1] 38.82397
+```
+
+``` r
+mean(penguins_no_na$bill_length_mm[penguins_no_na$species == "Chinstrap"])
+## [1] 48.83382
+```
+
+``` r
+mean(penguins_no_na$bill_length_mm[penguins_no_na$species == "Gentoo"])
+## [1] 47.56807
+```
+
+---
+
+# Computing by partition, the smarter way
+
+
+``` r
+tapply(penguins_no_na$bill_length_mm, # first the variable you want to summarise
+	   penguins_no_na$species, # then the partitioning variable
+	   mean) # then the function you want to use for summarising
+##    Adelie Chinstrap    Gentoo 
+##  38.82397  48.83382  47.56807
+```
+
+---
+
+# Multiple partitions
+
+
+``` r
+tapply(penguins_no_na$bill_length_mm, 
+	   penguins_no_na[, c('species', 'sex')], 
+	   mean)
+##            sex
+## species       female     male
+##   Adelie    37.25753 40.39041
+##   Chinstrap 46.57353 51.09412
+##   Gentoo    45.56379 49.47377
+```
+
+---
+
+# R base graphics
+
+A brief summary
+
+---
+
+# Histograms
+
+A histogram shows the distribution of a single variable.
+
+The default from `hist` is pretty ugly.
+
+
+``` r
+hist(penguins_no_na$body_mass_g)
+```
+
+![](2_graphics_files/figure-html/default_hist-1.svg)&lt;!-- --&gt;
+
+---
+
+# Histograms
+
+There are many options you can adjust.
+
+
+``` r
+hist(penguins_no_na$body_mass_g,
+	 main = "", # disables the title
+	 xlab = "Penguin Body Mass (g)",
+	 breaks = 15, # adjust the number of bins
+	 col = 'skyblue', border = 'darkblue')
+```
+
+![](2_graphics_files/figure-html/better_hist-1.svg)&lt;!-- --&gt;
+
+
+---
+
+# Colours - named colours
+
+* R has 657 named colours: `col = 'rosybrown'`
+* see the `colors()` function for the names
+
+![](2_graphics_files/figure-html/unnamed-chunk-1-1.svg)&lt;!-- --&gt;
+
+---
+
+# Colours - 24-bit colour
+
+* R supports colours using the common HTML color coding: `#RRGGBB`
+	- RR, GG, BB are the amounts of red, green, and blue
+	- each ranges from `00` (none) to `FF` (most)
+	- [Colour pickers](https://www.w3schools.com/colors/colors_picker.asp) online help you translate a color in real life to a coded color
+	
+
+``` r
+hist(penguins_no_na$body_mass_g, col = "#77aa11", border = "#005500")
+```
+
+![](2_graphics_files/figure-html/color_hist-1.svg)&lt;!-- --&gt;
+
+---
+
+# Colour advice
+
+* Best practise: choose colours using reputable packages based in colour theory
+	- [scico](https://github.com/thomasp85/scico) (continuous data)
+	- [viridis](https://github.com/sjmgarnier/viridis) (continuous data)
+	- [rcolorbrewer](https://colorbrewer2.org/#type=sequential&amp;scheme=BuGn&amp;n=3) (Categorical data)
+	- [iWantHue](https://medialab.github.io/iwanthue/) (generates custom categorical palettes)
+
+
+---
+
+# Scatterplots
+
+For comparing how two variables *covary*
+
+
+``` r
+plot(penguins$body_mass_g, penguins$bill_length_mm, 
+	 xlab = "Body Mass (g)", ylab = "Bill Length (mm)")
+```
+
+![](2_graphics_files/figure-html/basic_scatter-1.svg)&lt;!-- --&gt;
+
+---
+
+# Scatterplots
+
+I can create a variable to store the colour I want to use for each point.
+
+
+``` r
+penguins$color[penguins$species == "Adelie"] = "#ff561b"
+penguins$color[penguins$species == "Chinstrap"] = "#b952c0"
+penguins$color[penguins$species == "Gentoo"] = "#00676a"
+
+
+plot(penguins$body_mass_g, penguins$bill_length_mm, 
+	 xlab = "Body Mass (g)", ylab = "Bill Length (mm)",
+	 col = penguins$color, pch = 16) # pch=16 uses a solid circle
+```
+
+![](2_graphics_files/figure-html/basic_scatter_col-1.svg)&lt;!-- --&gt;
+
+---
+
+# Scatterplots
+
+I can do the same for sex. `ifelse()` works great if you have 2 categories!
+
+
+``` r
+penguins$symbol = ifelse(penguins$sex == "male", 15, 17)
+
+
+plot(penguins$body_mass_g, penguins$bill_length_mm, 
+	 xlab = "Body Mass (g)", ylab = "Bill Length (mm)",
+	 col = penguins$color, pch = penguins$symbol) 
+```
+
+![](2_graphics_files/figure-html/basic_scatter_col_pch-1.svg)&lt;!-- --&gt;
+
+---
+
+# Annotations
+
+You may *annotate* plots by running commands after you use the `plot()` command. Things to try:
+
+
+``` r
+legend() # create a legend
+abline() # create a line if you know intercept/slope
+lines() # more general function for adding lines
+points() # add x-y points
+text() # Add text annotations
+mtext() # Add text to plot margins
+
+```
+
+---
+
+# Add a legend
+
+
+``` r
+plot(penguins$body_mass_g, penguins$bill_length_mm, 
+	 xlab = "Body Mass (g)", ylab = "Bill Length (mm)",
+	 col = penguins$color, pch = penguins$symbol)
+
+legend("bottomright", 
+	   legend = c("Adelie", "Chinstrap", "Gentoo", "male", "female"),
+	   col = c("#ff561b", "#b952c0", "#00676a", "black", "black"), 
+	   pch = c(16, 16, 16, 15, 17))
+```
+
+![](2_graphics_files/figure-html/annotate_leg-1.svg)&lt;!-- --&gt;
+
+---
+
+# Boxplots: For summarizing across partitions
+
+
+* **Boxplots** (sometimes **box-and-whisker** diagrams) summarize key statistics.
+	- median
+	- first and third quartiles (hinges)
+	- approx. 95% confidence interval for median (notch)
+	- min/max (or quartile + 1.5*IQR) (whiskers)
+* They are very useful for comparing variables among groups.
+* `y ~ group` is a special data type called a `formula`
+
+
+---
+
+# Boxplots: For summarizing across partitions
+
+
+``` r
+boxplot(body_mass_g ~ species, data = penguins, boxwex=0.4, notch = TRUE)
+```
+
+![](2_graphics_files/figure-html/unnamed-chunk-3-1.svg)&lt;!-- --&gt;
+
+---
+# Making a boxplot
+
+
+``` r
+cols = c("#ff561b", "#b952c0", "#00676a")
+boxplot(body_mass_g ~ species+sex, data = penguins, 
+        # set the colours, repeated twice (female and male)
+        col = rep(cols, 2), 
+        # axis label text size
+        cex.axis = 0.8,
+        # labels under the boxes
+        names = c("", "Female", "", "", "Male", ""), 
+        # set axis titles
+        xlab = "", ylab = "Body mass (g)", 
+        # disable the box around the plot
+        bty = 'n', 
+        notch = TRUE
+)
+# add a legend to the plot
+legend("topleft", legend = unique(penguins$species), 
+       title = "Species", fill = cols, bty = 'n')
+       
+```
+
+---
+
+# Boxplots: For summarizing across partitions
+
+![](2_graphics_files/figure-html/boxplot2-1.svg)&lt;!-- --&gt;
+
+---
+
+
+# Boxplots: For summarizing across partitions
+
+![](2_graphics_files/figure-html/boxplot3-1.svg)&lt;!-- --&gt;
+
+Add a line with `abline()` to distinguish male vs female. 
+
+Or experiment with the `at = ` argument.
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script src="../macros.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "monokai",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

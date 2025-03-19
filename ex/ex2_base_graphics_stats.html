@@ -10,9 +10,9 @@
 
 
 
-<meta name="date" content="2025-03-17" />
+<meta name="date" content="2025-03-19" />
 
-<title>Exercise Set 1: Introduction to R</title>
+<title>Exercise Set 2: Basic Graphics, Statistics</title>
 
 <script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
 // be compatible with the behavior of Pandoc < 2.8).
@@ -253,7 +253,6 @@ if (window.hljs) {
 
 
 
-<link rel="stylesheet" href="ex.css" type="text/css" />
 
 
 
@@ -350,149 +349,130 @@ display: none;
 
 
 
-<h1 class="title toc-ignore">Exercise Set 1: Introduction to R</h1>
-<h4 class="date">17 March 2025</h4>
+<h1 class="title toc-ignore">Exercise Set 2: Basic Graphics,
+Statistics</h1>
+<h4 class="date">19 March 2025</h4>
 
 </div>
 
 
 <div id="guidelines" class="section level2">
 <h2>Guidelines</h2>
-<p>Below you will find a few tasks. Work through them at your own pace,
-and produce a document answering the questions presented. You should
-hand this in in Word/Open Office/PDF format, and this document should
-include minimal code (unless specifically requested). Rather, answer the
-questions in complete sentences. If you are asked for a figure, embed it
-in the document. If a question requires <strong>only</strong> code, you
-can still include it in this document with a note like “See code
-appendix.”</p>
-<p>You will upload <strong>one</strong> Word/PDF document per day of the
-course, along with a code appendix. To make the code appendix, see the
-instructions in question 1 below. You are welcome/encouraged to work in
-teams (max two students per team), if you do so please turn in a single
-assignment on OLAT and put both names on the PDF/Word file and in the
-code.</p>
-<p>It is expected that you will be able to finish these during class,
-but if you need extra time, the assignments are always due one day after
-we work on them in class.</p>
-<div id="code-organisation-and-style" class="section level3">
-<h3>Code Organisation and Style</h3>
-<p>You should write a separate self-contained script for each of the
-numbered questions below. You should name them with the number and
-something descriptive, and save them in your code folder. For example,
-to answer question 3 about a frog dataset, you might save the file as
-“R/3_frogs.R”</p>
-<p>Make sure you comment your code! Start each script with the date,
-your name, and a summary of the script does. You can also intersperse
-helpful comments throughout your code to remind yourself of what you are
-doing.</p>
+<p>Find the guidelines on the <a href="ex1_intro.html">first exercise
+sheet</a>.</p>
+<div id="task-1-univariate-statistics-and-plots" class="section level3">
+<h3>Task 1: Univariate statistics and plots</h3>
+<p>For our first task, we will explore doing statistics on a single
+variable at a time, and on making and customising histograms and
+boxplots.</p>
+<p>Begin by reading the penguin dataset that you saved to your computer
+for exercise 1, task 3. This time we will use the full dataset, not the
+subset.</p>
+<p>In the following subtasks, you will be asked for
+<code>summary statistics</code>. Unless otherwise specified, please
+provide:</p>
+<ul>
+<li>The <strong>mean</strong>: <code>mean</code></li>
+<li><strong>Standard deviation</strong>: <code>sd</code></li>
+<li><strong>Sample size</strong>: Many ways; try <code>length()</code>
+or <code>nrow()</code> or <code>table()</code></li>
+<li><strong>Standard error</strong> (no function, you will need to do
+this manually)</li>
+<li>The <strong>minimum</strong> and <strong>maximum</strong>:
+<code>min()</code> and <code>max()</code>, or <code>range()</code></li>
+</ul>
+<p>1.1. Choose one of the quantitative variables to explore. Produce
+<code>summary statistics</code> and make a histogram for that variable.
+Be sure to review the help file for the histogram function to customize
+your plot. You should label the axes and choose an appropriate number of
+breaks/bins for the dataset.</p>
+<p>1.2. The dataset covers three different species of penguin and two
+different sexes, all of which likely have different body sizes. For now
+we will work with a single subsetting variable, <code>species.</code>
+See if you can figure out how to compute <code>summary statistics</code>
+for each species separately using the <code>tapply()</code> function.
+How do the different species differ in whatever variable you chose?</p>
+<p>1.3 Produce a histogram for each species. This should be presented on
+a single figure with three panels in a column (one per species). You can
+do this by running <code>par(mfrow=c(3,1))</code> before you make your
+three histograms. How would you change this code to make the figure wide
+(so one row with the histograms side-by-side)? Some other things to
+try:</p>
+<ul>
+<li>The x-axis label only needs to be on the bottom histogram. Turn it
+off for the other two.</li>
+<li>Make sure the x-axis limits are the same for all 3 histograms, so
+you can directly compare them.</li>
+<li>Include the species name somewhere on each plot.</li>
+<li>Look at the color scheme on the <a href="https://allisonhorst.github.io/palmerpenguins/">official Palmer
+penguins website</a>. Change the colours filling the bars to match the
+colours for each species on the website.</li>
+</ul>
+<p>1.4 Boxplots are useful for visualising datasets with multiple
+categorical variables. You can create one with the following syntax:</p>
+<pre class="r"><code>boxplot(variable ~ category1 + category2, data = dataframe)</code></pre>
+<p>Be sure to substitute the names: <code>dataframe</code> is the name
+of the data frame you will use, and <code>variable</code>,
+<code>category1</code> and <code>category2</code> are the names of the
+variables inside the dataframe.</p>
+<p>Use the same numeric variable as your <code>variable</code> here, and
+<code>species</code> and <code>sex</code> as the categorical
+variables.</p>
+<p>Unfortunately, the default boxplot isn’t very nice to look at.
+Explore the help file or search online to see if you can make the plot
+better. Do <strong>not</strong> use <code>ggplot</code> for this
+exercise, we will come to this later. Some suggestions to help you
+improve the plot:</p>
+<ul>
+<li>Change the font size of the labels</li>
+<li>Change the text of the labels</li>
+<li>Change the fill colour of the boxes</li>
+<li>Change the spacing of the boxes so that the boxes are “grouped” by
+<code>category1</code></li>
+<li>Add a notch</li>
+<li>What happens if you change the order of <code>category1</code> and
+<code>category2</code>? Which do you prefer?</li>
+</ul>
+<p>You don’t need to turn in every attempt you make here. Just tweak the
+figure until it looks good, and turn in the final version.</p>
 </div>
-<div id="figures" class="section level3">
-<h3>Figures</h3>
-<p>Figures and tables should be as complete as you can make them,
-similar to what you would find in a published article. Obviously the
-expectation is that they will improve during the course as you learn
-more R. What this means: colours, if used, should enhance the figure and
-aid in understanding it (they should mean something, don’t change
-colours for no reason). Font sizes should be readable. Axes should be
-clearly labeled and include units if appropriate. In your Word/PDF
-document, you should include a caption for every figure/table that
-describes what is shown in sufficient detail to make the figure stand
-alone. Titles are not necessary.</p>
-</div>
-<div id="task-1-project-organisation" class="section level3">
-<h3>Task 1: Project organisation</h3>
-<p>Create a workspace and Rstudio project for this course. You can do
-this in Rstudio by choosing File -&gt; New Project, and then selecting
-New Directory. Give it an appropriate name, e.g. “intro_r”.</p>
-<p>1a. To keep your project organised, create a folder structure inside
-your project. This can be anything that makes sense for you, but at a
-minimum should contain a folder for data, a folder for code, and a
-folder for your results.</p>
-<p>Also remember to include a <code>readme.txt</code> (or
-<code>.md</code> if you want to use markdown) file at the top level of
-your project. This should include: Your name, the date the project was
-started, the project title, a brief description of the project. It’s
-also a good practise to include the version of R you are using in the
-project description.</p>
-<p><strong>Hint</strong>: some people find it useful to have a different
-code folder for each day in the couse, e.g. “r_day1”, “r_day2”, etc.</p>
-<p><strong>To hand in code each day</strong>: You should send your
-entire project. Outside R, find the project folder, zip it, and upload
-the .zip file to OLAT.</p>
-</div>
-<div id="task-2-reading-a-local-file" class="section level3">
-<h3>Task 2: Reading a local file</h3>
-<p>Download the <code>coral_fish.csv</code> dataset from OLAT, and save
-it in the data folder in your project.</p>
-<p>This is a dataset of fish species richness (i.e., the total number of
-species) for a number of tropical and subtropical coral reefs in the
-Atlantic Ocean.</p>
-<p>2a. Use the <code>read.csv()</code> function to load the dataset.
-Look over the dataset in the viewer (you can use the <code>View()</code>
-function).</p>
-<p>2b. The dataset needs some cleaning. Inspect the data in R to find if
-there are any obvious problems. What issues did you find? How did you
-find them?</p>
-<p>2c. Use R to handle the problematic cases. How did you deal with
-them? Save a new cleaned copy of the dataset (do not overwrite the
-original data!) using the <code>write.csv()</code> function.</p>
-<p>2d. Inspect the data graphically. Using the cleaned dataset, use the
-<code>hist()</code> function to create a histogram. You can look at the
-help file to hist to see if you want to change any of the defaults.</p>
-<p><strong>Hints</strong>: You might consider creating separate
-histograms for tropical and subtropical reefs.</p>
-<p>You can save the histogram to your disk using the <code>pdf()</code>
-and <code>dev.off()</code> functions:</p>
-<pre class="r"><code># change the name to whatever you want, and don&#39;t forget to include a folder name!
-# use ?pdf to see the help file, experiment with changing the defaults
-pdf(&quot;filename.pdf&quot;) 
-
-# replace ... with whatever arguments the hist function requires
-hist(...)
-
-# tells R that the figure is done and it&#39;s ok to save
-dev.off() </code></pre>
-</div>
-<div id="task-3-reading-data-from-the-internet" class="section level3">
-<h3>Task 3: Reading data from the internet</h3>
-<p>The <code>read.csv()</code> function can also download data from the
-internet! Use it like so to get the next dataset:</p>
-<pre class="r"><code># remember you need to save the dataset into a variable!
-read.csv(&quot;https://raw.githubusercontent.com/allisonhorst/palmerpenguins/refs/heads/main/inst/extdata/penguins.csv&quot;)</code></pre>
-<p>This is the <a href="https://allisonhorst.github.io/palmerpenguins/index.html">Palmer
-Penguins dataset</a>, a freely available dataset consisting of
-information on the body measurements of three species of Penguin
-collected by Dr. Kristen Gorman at Palmer Station in Antartica.</p>
-<p>3a. <strong>Data cleaning</strong>. Inspect the data in R. The
-dataset contains a number of NAs. You might also inspect to make sure
-there are no other obvious issues. Use R to remove any rows that contain
-NAs. Save the edited data frame to your computer in “data/pengiuns.csv”
-using <code>write.csv()</code>.</p>
-<p>Next, subset the data to look at only Gentoo penguins. Save the
-subsetted dataset in a second .csv file on your computer.</p>
-<p>3b. How many rows are in the new dataset? How many males and females?
-How many from each island? What R function(s) did you use to answer
-this?</p>
-<p>3c. Compute some summary statistics for the variable
-<code>body_mass_g</code>.</p>
-<p>Useful statistics include <code>mean</code>,
-<code>standard deviation</code>, the <code>minimum</code> and
-<code>maximum</code>, and the <code>standard error of the mean</code>
-(remember: standard error is <span class="math inline">\(\frac{s}{\sqrt{n}}\)</span>). Many of these
-functions are on the cheat sheet. You can also search for a string using
-two question marks, e.g., `??“standard deviation” will search for help
-files that refer to the standard deviation.</p>
-<p>3d. Inspect the data using bivariate scatterplots. Use
-<code>plot(x, y)</code>, where x and y are two vectors that you would
-like to plot against each other. Check out the help file for plot, use
-it to figure out how to change the x- and y-axis titles. You might try
-plotting one or two of the bill measurements on the <code>y</code> axis,
-with <code>body_mass_g</code> on the <code>x</code> axis.</p>
-<p>As with question 2, save these plots by putting the <code>plot</code>
-function between <code>pdf()</code> and <code>dev.off()</code>. I
-recommend you save yoru plots in a separate folder (e.g., the
-<code>output</code> or <code>results</code> folder).</p>
+<div id="task-2-bivariate-plots" class="section level3">
+<h3>Task 2: Bivariate plots</h3>
+<p>Choose a single species to work with, and subset the data to make a
+data frame with only that species. Then choose two variables, one will
+be your <code>x</code> variable and one the <code>y</code> (it doesn’t
+matter which is which).</p>
+<p>2.1. Compute <code>summary statistics</code> for both variables,
+separately for male and female. In addition to the usual statistics, use
+the <code>cor()</code> function to compute the correlation between the
+two variables.</p>
+<p>2.2. Produce a <strong>bivariate scatterplot</strong> showing the
+correlation between the two variables. You can choose to either show
+males and females on separate plots (but on a single figure, with
+identical x- and y- axis limits), or together on a single plot. If you
+choose a single plot, you should use color to show the sexes.</p>
+<p>2.3 You can use the <code>lm()</code> function to calculate a
+best-fit line for the data. The syntax looks like this:</p>
+<pre class="r"><code>mod = lm(y ~ x, data = dataframe)</code></pre>
+<p>You need to substitute the variable names for <code>y</code> and
+<code>x</code>, and the name of the data frame for
+<code>dataframe</code>. Make a linear model separately for males and
+females (use <code>subset()</code> to create separate data frames for
+the two sexes, and remember to save them in different variables, such as
+<code>mod_male</code> and <code>mod_female</code>). You can use the
+<code>print()</code> function to view the intercept and slope. Are the
+two slopes very different?</p>
+<p>2.4. Add the best-fit line to your plot(s) from 2.2. To do this, you
+need to make a plot <strong>annotation</strong>. This is a function you
+run after you make a plot to add something to the plot. Repeat the
+<code>plot()</code> command to make the first plot from 2.2. Then, on
+the next line, run <code>abline(model)</code> (substitute the model name
+for <code>model</code>). You can also add colour to match the colours
+from the plot.</p>
+<p><strong>Hint:</strong> If you made two separate plots for each sex,
+you will need to run the first <code>plot()</code>, then
+<code>abline()</code>, then the second <code>plot()</code>, then the
+second <code>abline()</code>, in that order.</p>
 </div>
 </div>
 

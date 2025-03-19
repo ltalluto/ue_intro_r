@@ -90,11 +90,11 @@ Next, subset the data to look at only Gentoo penguins. Save the subsetted datase
 
 3b. How many rows are in the new dataset? How many males and females? How many from each island? What R function(s) did you use to answer this?
 
-3c. Compute some summary statistics for the variable `body_mass_g`. Does it make sense to compute summary statistics separately for different subsets of the data? If so, compute the statistics separately for each subset.
+3c. Compute some summary statistics for the variable `body_mass_g`. 
 
 Useful statistics include `mean`, `standard deviation`, the `minimum` and `maximum`, and the `standard error of the mean` (remember: standard error is $\frac{s}{\sqrt{n}}$). Many of these functions are on the cheat sheet. You can also search for a string using two question marks, e.g., `??"standard deviation" will search for help files that refer to the standard deviation. 
 
-3d. Inspect the data using bivariate scatterplots. Use `plot(x, y)`, where x and y are two vectors that you would like to plot against each other. Check out the help file for plot, use it to figure out how to change the x- and y-axis titles. You might try plotting one or two of the bill measurements on the `y` axis, with `body_mass_g` on the `x` axis. If you used subsets in 3c, also use them here, either by making a separate plot for each subset, or by plotting them together on the same plot using different colours.
+3d. Inspect the data using bivariate scatterplots. Use `plot(x, y)`, where x and y are two vectors that you would like to plot against each other. Check out the help file for plot, use it to figure out how to change the x- and y-axis titles. You might try plotting one or two of the bill measurements on the `y` axis, with `body_mass_g` on the `x` axis. 
 
 As with question 2, save these plots by putting the `plot` function between `pdf()` and `dev.off()`. I recommend you save yoru plots in a separate folder (e.g., the `output` or `results` folder).
 

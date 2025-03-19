@@ -61,6 +61,8 @@ Students will learn fundamental concepts of R programming, including the use of 
     <td class="tg-bord"></td>
     <td class="tg-0pky">R base graphics<br/>
     	Simple statistics in R
+      Slides • <a href="lec/2_graphics.html">HTML</a> • <a href="lec/2_graphics.pdf">PDF</a><br/>
+      <a href="ex/ex2_base_graphics_stats.html">Exercises</a><br/>
     </td>
   </tr>  
  <tr style="border-bottom: double gray">
