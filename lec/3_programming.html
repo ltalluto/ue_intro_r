@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Programming in R</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Lauren Talluto" />
+    <script src="assets/header-attrs-2.27/header-attrs.js"></script>
+    <link href="assets/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="assets/remark-css-0.0.1/hygge.css" rel="stylesheet" />
+    <link rel="stylesheet" href="../assets/intro_r.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+class: title-slide, middle
+
+&lt;style type="text/css"&gt;
+  .title-slide {
+    background-image: url('img/bg.jpg');
+    background-color: #23373B;
+    background-size: contain;
+    border: 0px;
+    background-position: 600px 0;
+    line-height: 1;
+  }
+&lt;/style&gt;
+
+
+
+# Lecture 3
+
+&lt;hr width="65%" align="left" size="0.3" color="orange"&gt;&lt;/hr&gt;
+
+## Programming in R
+
+&lt;hr width="65%" align="left" size="0.3" color="orange" style="margin-bottom:40px;"&gt;&lt;/hr&gt;
+
+.instructors[
+  **Introduction to R for Biologists** - Lauren Talluto
+]
+
+---
+
+# Looping
+
+In programming, **loops** allow us to do something repeatedly, without copy-pasting code. One simple loop construct is called a `for` loop. Here, we create a **loop variable** `v` that takes the values from an **iteration variable** (normally a vector) named `vec`.
+
+The code between the `{}` symbols is called a **block**.
+
+
+``` r
+vec = c(1, 5, 3, 6, 8)
+
+for(v in vec) {
+	print(v)
+}
+## [1] 1
+## [1] 5
+## [1] 3
+## [1] 6
+## [1] 8
+```
+
+---
+
+# For loops — index format
+
+Sometimes we want to iterate over something by **index** (for example, rows of a data frame, or using relative positions for some reason). 
+
+Here we compute the first 20 Fibbonaci numbers.
+
+
+``` r
+fib = numeric(20)
+fib[1] = 0
+fib[2] = 1
+
+# start on 3, because the first two are already defined!
+for(i in 3:length(fib)) {
+	fib[i] = fib[i - 1] + fib[i - 2]
+}
+print(fib)
+##  [1]    0    1    1    2    3    5    8   13   21   34   55   89  144  233  377
+## [16]  610  987 1597 2584 4181
+```
+
+
+---
+
+# Conditionals
+
+A **conditional** statement makes a decision based on the value of an expression.
+
+
+``` r
+peng = read.csv("data/penguins.csv")
+(body_masses = tapply(peng$body_mass_g, peng$species, mean, na.rm = TRUE))
+##    Adelie Chinstrap    Gentoo 
+##  3700.662  3733.088  5076.016
+```
+
+``` r
+if(body_masses['Gentoo'] &gt; body_masses['Chinstrap']) {
+	print("Gentoo penguins are larger than Chinstrap penguins")
+}		
+## [1] "Gentoo penguins are larger than Chinstrap penguins"
+```
+
+---
+
+# Conditionals — else clauses
+
+An **else clause** allows you to make a binary choice
+
+
+
+``` r
+(bill_length = tapply(peng$bill_length_mm, peng$species, mean, na.rm = TRUE))
+##    Adelie Chinstrap    Gentoo 
+##  38.79139  48.83382  47.50488
+```
+
+``` r
+if(bill_length['Gentoo'] &gt; bill_length['Chinstrap']) {
+	print("Gentoo penguins have larger bills than Chinstrap penguins")
+} else {
+	print("Chinstrap penguins have larger bills than Gentoo penguins")
+}		
+## [1] "Chinstrap penguins have larger bills than Gentoo penguins"
+```
+
+---
+
+# Conditionals — chaining clauses
+
+You can chain together multiple either-or conditionals with **else if**
+
+
+
+``` r
+biggest_bill = max(bill_length)
+if(bill_length['Gentoo'] == biggest_bill) {
+	print("Gentoo penguins have the longest bills")
+} else if(bill_length['Chinstrap'] == biggest_bill) {
+	print("Chinstrap penguins have the longest bills")
+} else {
+	print("Adelie penguins have the longest bills")
+}	
+## [1] "Chinstrap penguins have the longest bills"
+```
+
+---
+
+# Functions
+
+You can write your own functions using the `function` keyword. 
+
+Here we write a small function to decide if an input value is a prime number, up to a maximum of 1000.
+
+
+``` r
+is_prime = function(x) {
+	if(x &gt; 1000)
+		return(NA)
+	
+	 # x cannot have factors larger than sqrt(x)	
+	max_factor = as(sqrt(x), "integer")
+	result = TRUE # if we don't find a factor, the number is prime
+	for(i in 2:max_factor) {
+		# if x divides into any number with no remainder it is not prime
+		if(x %% i == 0) { 
+			result = FALSE
+		}
+	}
+	return(result)
+}
+```
+
+
+---
+
+# Functions — default parameters
+
+You can add defaults to parameters when you define a function.
+
+Here we allow the user to decide the maximum, with a default of 1000.
+
+
+``` r
+is_prime = function(x, max_value = 1000) {
+	if(x &gt; max_value)
+		return(NA)
+
+	 # x cannot have factors larger than sqrt(x)	
+	max_factor = as(sqrt(x), "integer")
+	result = TRUE # if we don't find a factor, the number is prime
+	for(i in 2:max_factor) {
+		# if x divides into any number with no remainder it is not prime
+		if(x %% i == 0) { 
+			result = FALSE
+		}
+	}
+	return(result)
+}
+```
+
+---
+# Vectorising is_prime
+
+Here is some additional code we worked on in class.
+
+
+``` r
+is_prime = function(x, max_value = 1000) {
+	if(any(x &gt; max_value))
+		return(NA)
+	# x cannot have factors larger than sqrt(x)
+	result = rep(TRUE, length(x)) # if we don't find a factor, the number is prime
+	for(j in 1:length(x)) {
+		max_factor = as(sqrt(x[j]), "integer")
+		for(i in 2:max_factor) {
+			# if x divides into any number with no remainder it is not prime
+			if(x[j] %% i == 0) { 
+				result[j] = FALSE
+			}
+		}
+	}
+	return(result)
+}
+
+numbers = 1:50
+
+is_prime(numbers)
+ifelse(is_prime(numbers), "prime", "not prime")
+```
+
+---
+
+# Simulations and Random Numbers
+
+Many times we need random numbers. Here are some useful functions for doing this.
+
+
+``` r
+# x is a vector, chooses n random items from x
+sample(x, n)
+
+# take n random numbers between min and max
+runif(n, min, max)
+
+# take n random integers from a poisson distribution
+# rate gives the average result
+rpois(n, rate)
+
+# take n random numbers from a normal distribution
+rnorm(n, mean, sd)
+```
+
+---
+
+# Random numbers: example
+
+
+``` r
+card_suits = c('hearts', 'diamonds', 'clubs', 'spades')
+card_vals = c(as.character(2:10), 'J', 'Q', 'K', 'A')
+card_deck = paste(rep(card_vals, 4), rep(card_suits, each = 13), sep = '-')
+head(card_deck)
+## [1] "2-hearts" "3-hearts" "4-hearts" "5-hearts" "6-hearts" "7-hearts"
+```
+
+``` r
+
+(poker_hand = sample(card_deck, 5, replace = FALSE))
+## [1] "6-diamonds" "10-clubs"   "6-hearts"   "8-hearts"   "A-diamonds"
+```
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script src="../macros.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "monokai",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

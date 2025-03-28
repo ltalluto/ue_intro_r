@@ -1,0 +1,84 @@
+---
+title: "Exercise Set 3: Programming"
+date: "28 March 2025"
+output: 
+  html_document:
+    self_contained: true
+    mathjax: https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Our task today will be to create a simple ecological model describing the change in population size of a (hypothetical) species.
+
+One simple model that describes how the population size ($N$) changes in time looks like this:
+
+$$
+N_{t+1} = N_t + B_t - D_t
+$$
+
+In other words, the population in the next generation will be the population in the current generation, plus the number of births ($B$), minus deaths ($D$).
+
+We can further define the number of births and deaths according to birth and death *rates*, in other words, the number of individuals that are born ($b$) or die ($d$) each generation, per individual currently alive:
+
+$$
+\begin{aligned}
+B_t & = bN_t \\
+D_t &= dN_t
+\end{aligned}
+$$
+
+
+### Task 1
+
+Implement this simple model, using a `for` loop in R. Use a starting population size of **100**, a death rate of **0.1**, and a birth rate of **0.2**. Run the model for **20** time steps.
+
+Some hints (with some sample code below): 
+
+* define all your variables at the start of the model
+* make a new empty vector to hold your results. It should have one entry for each time step, and the first entry should be the starting population size.
+
+Here is some code to get you started.
+``` {r eval = FALSE}
+time_steps = 20
+N = numeric(time_steps + 1) # look at N, what does it look like?
+N[1] = 100 # starting population size
+d = 0.1 # death rate
+b = 0.2 # birth rate
+
+for(t in 1:time_steps) {
+	B_t = # FILL IN, compute the number of births
+	D_t = # FILL IN, compute the number of deaths
+	N[t+1] = N[t] + B_t - D_t
+}
+```
+
+**1.1**. Fill in the missing pieces of the code above, and then run the model. Make a line chart showing how the population size changes over time.
+**1.2**. Experiment with the `b` and `d` parameters. What happens if d is a little larger than b? What about if d = 1? What if d is 2?
+
+### Task 2: Improving the model
+
+Our model has a problem: population size can be negative! There are many ways we could fix this, but the simplest is just to use an `if` statement.
+
+Insert an `if` statement in your code that checks if the population size is negative and sets population size to zero if so. Then re-do **1.2** above and compare the result.
+
+### Task 3: Adding randomness
+
+Our model assumes that the birth and death rates are constant. However, in natural populations births and deaths fluctuate every generation due to conditions and random chance. Instead we can view these birth and death rates as an average, and simulate randomness using a Poisson process. We can also use this as an excuse to practise writing functions.
+
+**3.1**. Examine the following function:
+
+```{r eval = FALSE}
+poisson_simulation = function(pop_size, rate) {
+	average_number_of_births_or_deaths = rate * pop_size
+	rpois(1, average_number_of_births_or_deaths)
+}
+```
+
+The function takes two arguments, `pop_size` and `rate`. What does the function do? Try running it a few times, using the starting population size and birth rate as the arguments. What results do you get? What do those numbers mean with respect to our model?
+
+**3.2** Edit your `for` loop to call this function when it is time to decide on the number of births and deaths each generation. Then re-do **1.1** and **1.2**. How did adding randomness change the result?
+
