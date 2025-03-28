@@ -80,7 +80,7 @@ Students will learn fundamental concepts of R programming, including the use of 
     <td class="tg-bord"></td>
     <td class="tg-0pky">Programming <br/>
       Slides • <a href="lec/3_programming.html">HTML</a> • <a href="lec/3_programming.pdf">PDF</a><br/>
-      <a href="ex/ex2_programming.html">Exercises</a><br/>
+      <a href="ex/ex3_programming.html">Exercises</a><br/>
     </td>
   </tr>  
  <tr style="border-bottom: double gray">
