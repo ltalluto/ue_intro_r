@@ -1,0 +1,51 @@
+---
+title: "Exercise Set 4: Intermediate Data Manipulation"
+date: "11 April 2025"
+output: 
+  html_document:
+    self_contained: true
+    mathjax: https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Our task today will be to clean up a dataset that was collected in a way that does not facilitate analysis.
+
+Download the "ex4" folder and three files from OLAT, and put them in your data folder.
+
+The data are hydromorphic measurements (depth, width, and velocity) of the Vjosa River in Albania. These measurements are intended for understanding how the river changes in space, and for computing how much water is flowing at each location (measured by discharge, $Q$, in $m^3/s$).
+
+You have three tables to work with, one each for depth, width, and velocity. Width is the width of the river, and was measured once at each location, except, rarely, there are multiple widths if the river was broken by and island.
+
+Velocity and depth are measured at multiple points along at each location, starting at one bank and working towards the other side. The measurements are paired: both variables are measured at the same points along the stream. The discharge at each location can then be computed as:
+
+$$
+Q = \bar{v} \times \bar{z} \times w
+$$
+
+where $w$ is the width (or sum of widths, if there is more than one) and $\bar{v}$ and $\bar{z}$ are the average velocity and depth, respectively.
+
+### Task 1
+
+Create a scatterplot of average velocity as a function of depth. How does velocity change with depth?
+
+There are many problems with the dataset, including missing values, text input where there should be numbers, and a format that is incompatible with proper analysis. Some of these issues will be challenging to handle, because the dataset does not include a README that explains the meaning of some of the comments. Therefore, when you make a decision or make changes before analysis, it will be important to document what you have done. Keep a log of the edits you make, and include this as part of your writeup for this task.
+
+A suggested order of operations is:
+
+1. Handle mistakes and missing values in both the velocity and depth datasets.
+2. Reshape both datasets into a tall format
+3. Use `substr` to split of the measurement number from each of the velocity and depth measurements (i.e., you will have one column that says just "velocity" or "depth" and one that will say "01", "02", etc).
+4. `Merge` the datasets into a single table, using `location_id` and the measurement number as ID columns.
+5. Finally make a scatterplot.
+
+### Task 2
+
+Depth, velocity and width measurements are all replicated to some degree within sites, but we want to compute a single discharge value based on **aggregate** values. Compute the average depth and average veolcity for each site, then compute the total (i.e., the sum) of the width. Merge all of these into a single data frame, and save the data frame as a csv. You don't need to write much for this task, just log what you've done and if you encountered anything unusual or unexpected.
+
+### Task 3
+
+Compute the discharge using the equation shown above. Produce a set of plots showing how discharge changes with the three input variables: depth, velocity, and width.

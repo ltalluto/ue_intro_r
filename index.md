@@ -43,10 +43,10 @@ Students will learn fundamental concepts of R programming, including the use of 
 </thead>
 <tbody>
  <tr style="border-bottom: double gray">
-    <td class="tg-0pky">Fri 14.03<br/>14:15-17:00</td>
+    <td class="tg-0pky">Fri 17.03<br/>14:15-17:00</td>
     <td class="tg-bord">RR 18</td>
-    <td class="tg-0pky"></td>
-    <td class="tg-bord"></td>
+    <td class="tg-0pky">Thu 27.03<br/>14:00-17:00</td>
+    <td class="tg-bord">RR 18</td>
     <td class="tg-0pky">
       Introduction, Basic data manipulation
       Basic plots and summary statistics<br/>
@@ -55,10 +55,10 @@ Students will learn fundamental concepts of R programming, including the use of 
     </td>
   </tr>
  <tr style="border-bottom: double gray">
-    <td class="tg-0pky">Mon 17.03<br/>14:15-17:00</td>
+    <td class="tg-0pky">Wed 19.03<br/>12:30-14:15</td>
     <td class="tg-bord">RR 18</td>
-    <td class="tg-0pky"></td>
-    <td class="tg-bord"></td>
+    <td class="tg-0pky">31.03<br/>14:00-16:00</td>
+    <td class="tg-bord">RR 14</td>
     <td class="tg-0pky">R base graphics<br/>
     	Simple statistics in R <br/>
       Slides • <a href="lec/2_graphics.html">HTML</a> • <a href="lec/2_graphics.pdf">PDF</a><br/>
@@ -66,29 +66,30 @@ Students will learn fundamental concepts of R programming, including the use of 
     </td>
   </tr>  
  <tr style="border-bottom: double gray">
-    <td class="tg-0pky">Wed 19.03<br/>12:30-14:15</td>
-    <td class="tg-bord">RR 18</td>
-    <td class="tg-0pky"></td>
-    <td class="tg-bord"></td>
-    <td class="tg-0pky">Intermediate data: reshaping, aggregating
-    </td>
-  </tr>  
- <tr style="border-bottom: double gray">
     <td class="tg-0pky">Fri 21.03<br/>14:15-17:00</td>
     <td class="tg-bord">RR 18</td>
-    <td class="tg-0pky"></td>
-    <td class="tg-bord"></td>
-    <td class="tg-0pky">Programming <br/>
-      Slides • <a href="lec/3_programming.html">HTML</a> • <a href="lec/3_programming.pdf">PDF</a><br/>
-      <a href="ex/ex3_programming.html">Exercises</a><br/>
+    <td class="tg-0pky">01.04<br/>12:00-14:00</td>
+    <td class="tg-bord">RR 14</td>
+    <td class="tg-0pky">Catch-up session
     </td>
   </tr>  
  <tr style="border-bottom: double gray">
     <td class="tg-0pky">Fri 28.03<br/>16:30-18:30</td>
     <td class="tg-bord">RR 18</td>
-    <td class="tg-0pky"></td>
-    <td class="tg-bord"></td>
-    <td class="tg-0pky">Advanced graphics with ggplot2
+    <td class="tg-0pky">03.04<br/>14:00-17:00</td>
+    <td class="tg-bord">RR 19</td>
+    <td class="tg-0pky"> Programming<br/>
+      Slides • <a href="lec/3_programming.html">HTML</a> • <a href="lec/3_programming.pdf">PDF</a><br/>
+      <a href="ex/ex3_programming.html">Exercises</a><br/>
+    </td>
+  </tr>  
+ <tr style="border-bottom: double gray">
+    <td class="tg-0pky">Fri 11.04<br/>16:30-18:30</td>
+    <td class="tg-bord">RR 18</td>
+    <td class="tg-0pky">04.04<br/>17:00-19:00</td>
+    <td class="tg-bord">RR 20</td>
+    <td class="tg-0pky">Intermediate data: reshaping, aggregating
+      <a href="ex/ex4_reshaping.html">Exercises</a><br/>
     </td>
  </tr>  
 </tbody>
