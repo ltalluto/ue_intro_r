@@ -84,7 +84,7 @@ Students will learn fundamental concepts of R programming, including the use of 
     </td>
   </tr>  
  <tr style="border-bottom: double gray">
-    <td class="tg-0pky">Fri 11.04<br/>16:30-18:30</td>
+    <td class="tg-0pky">Tue 13.05<br/>15:15-18:00</td>
     <td class="tg-bord">RR 18</td>
     <td class="tg-0pky">04.04<br/>17:00-19:00</td>
     <td class="tg-bord">RR 20</td>
