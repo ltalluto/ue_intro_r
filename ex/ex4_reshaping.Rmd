@@ -38,7 +38,7 @@ A suggested order of operations is:
 
 1. Handle mistakes and missing values in both the velocity and depth datasets.
 2. Reshape both datasets into a tall format
-3. Use `substr` to split of the measurement number from each of the velocity and depth measurements (i.e., you will have one column that says just "velocity" or "depth" and one that will say "01", "02", etc).
+3. Use `substr` to split off the measurement number from each of the velocity and depth measurements (i.e., you will have one column that says just "velocity" or "depth" and one that will say "01", "02", etc).
 4. `Merge` the datasets into a single table, using `location_id` and the measurement number as ID columns.
 5. Finally make a scatterplot.
 

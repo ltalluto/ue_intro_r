@@ -88,7 +88,8 @@ Students will learn fundamental concepts of R programming, including the use of 
     <td class="tg-bord">RR 18</td>
     <td class="tg-0pky">04.04<br/>17:00-19:00</td>
     <td class="tg-bord">RR 20</td>
-    <td class="tg-0pky">Intermediate data: reshaping, aggregating
+    <td class="tg-0pky">Intermediate data: reshaping, aggregating<br/>
+      Slides • <a href="lec/4_reshaping.html">HTML</a> • <a href="lec/4_reshaping.pdf">PDF</a><br/>
       <a href="ex/ex4_reshaping.html">Exercises</a><br/>
     </td>
  </tr>  

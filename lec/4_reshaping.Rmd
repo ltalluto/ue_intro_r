@@ -1,0 +1,236 @@
+---
+title: "Data Manipulation 2: reshape, aggregate, and others"
+author: "Lauren Talluto"
+date: "May 2025"
+output:
+  xaringan::moon_reader:
+    css: [default, ../assets/intro_r.css, "hygge"]
+    lib_dir: assets
+    seal: false
+    nature:
+      highlightStyle: monokai
+      highlightLines: true
+      countIncrementalSlides: false
+      beforeInit: "../macros.js"
+---
+
+class: title-slide, middle
+
+<style type="text/css">
+  .title-slide {
+    background-image: url('img/bg.jpg');
+    background-color: #23373B;
+    background-size: contain;
+    border: 0px;
+    background-position: 600px 0;
+    line-height: 1;
+  }
+</style>
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "##", dev="svg", error = TRUE, fig.height=5.5, fig.width = 5.5)
+library(knitr)
+library(kableExtra)
+```
+
+# Lecture 4
+
+<hr width="65%" align="left" size="0.3" color="orange"></hr>
+
+## Intermediate Data Manipulation
+
+<hr width="65%" align="left" size="0.3" color="orange" style="margin-bottom:40px;"></hr>
+
+.instructors[
+  **Introduction to R for Biologists** - Lauren Talluto
+]
+
+---
+
+# Tall vs wide data
+
+From the first day:
+
+* Arrange your data so that each row is a single observation, each column is a variable ("tidy" data)
+
+---
+layout: true
+
+# A wide data example
+
+```{r read_tree, echo = FALSE}
+trees = read.csv("data/tree_abundance.csv")
+head(trees)
+```
+---
+
+* Abundances of five tree species
+* Note that the format of the data makes some analyses easy
+	- What is the average abundance for *Abies balsamifera* across all years?
+
+---
+* But other things are harder 
+	- What is the average of all species combined for each year? 
+	- What is the average for each species among years?
+---
+* Arrange your data so that each row is a single observation, each column is a variable ("tidy" data)
+* This dataset violates this principle!
+	- `abundance` is spread across five colums.
+	- `species` is a variable but not a column!
+---
+layout: false
+
+# Converting from wide to tall
+
+* An add-on package, `reshape2`, can help us convert between **wide** and **tall** data frames with two functions:
+	- From wide => tall: `melt`
+	- From tall => wide: `dcast`
+
+---
+
+# Converting from wide to tall
+
+```{r melt}
+# install.packages("reshape2") # run this once, to install the package
+library("reshape2")
+trees_tall = melt(trees, id.vars = c("pid", "year"), 
+				  variable.name = "species", 
+				  value.name = "abundance")
+head(trees_tall)
+```
+
+---
+
+# Converting back to wide
+
+```{r dcast}
+# install.packages("reshape2") # run this once, to install the package
+library("reshape2")
+trees_wide = dcast(pid ~ year+species, data = trees_tall, value = "abundance", fill = 0)
+trees_wide[1:7, 1:7]
+```
+
+
+
+---
+
+# String manipulation: substr
+
+`substr(x, i, j)`: extract a piece of a string `x`, starting in position `i` and ending in position `j`.
+
+```{r substr}
+substr("here is a string", 6, 12)
+```
+---
+
+# String manipulation: substr
+
+`substr(x, i, j)`: extract a piece of a string `x`, starting in position `i` and ending in position `j`.
+
+```{r velo}
+vel = read.csv("../data/ex4/velocity.csv")
+vel[1:3, 1:7]
+substr(colnames(vel)[-1], 11, 12)
+```
+---
+
+# String manipulation: paste
+
+`paste(x, y, sep = "-")`: combine x and y together into 1 string, separated by the "-" character
+
+```{r paste}
+x = "hello"
+y = "world"
+paste(x, y, sep = " ")
+```
+---
+
+# String manipulation: pattern matching
+
+Complex string manipulations are possible using **regular expressions**.
+
+Useful functions: `grep`, `grepl`, `sub`, `gsub`
+
+---
+
+# Combining datasets: merge
+
+Two tables can be combined based on matching **keys**
+
+```{r width_vel_clean, echo = FALSE, warning = FALSE}
+width = read.csv("../data/ex4/width.csv")
+# fix places where text was entered in numeric fields
+width$width_m_1[9] = 39.4
+width$width_m_1[10] = 20.8
+width$width_m_2[9] = 25.4
+width$width_m_2[10] = 24.6
+
+# alternative:
+# width$width_m_1 = sub("channel [12]: (\\d+)", "\\1", width$width_m_1)
+# width$width_m_2 = sub("channel [12]: (\\d+)", "\\1", width$width_m_2)
+
+# replace blanks and text with NA
+width$width_m_2[width$width_m_2 == " *mean width"] = NA
+width$width_m_2[width$width_m_2 == ""] = NA
+
+# make into numbers
+width$width_m_1 = as(width$width_m_1, "numeric")
+width$width_m_2 = as(width$width_m_2, "numeric")
+
+
+# get into tall format, remove unneeded variable column
+width_clean = melt(width, id.var = "location_id", value.name = "width_m")
+width_clean$variable = NULL
+width_clean = width_clean[complete.cases(width_clean),]
+
+
+velocity = read.csv("../data/ex4/velocity.csv")
+
+# make it tall
+velocity_clean = melt(velocity, id.vars = "location_id", value.name = "vel_m_per_s")
+
+# extract the measurement number and drop the "variable" column
+velocity_clean$measurement_number = substr(velocity_clean$variable, 11, 12)
+velocity_clean$variable = NULL
+velocity_clean = velocity_clean[order(velocity_clean$location_id),]
+```
+
+```{r merge_head}
+head(velocity_clean)
+head(width_clean)
+```
+---
+
+
+
+# Combining datasets: merge
+
+Two tables can be combined based on matching **keys**
+
+Options to check in the help: `all.x`, `all.y`
+
+```{r merge}
+merged1 = merge(velocity_clean, width_clean, by = "location_id")
+head(merged1)
+```
+---
+
+# Complex aggregation: aggregate
+
+Velocity comes with multiple measurements per location ID. `aggregate` is like a supersized `tapply` for computing statistics across different categories in a table.
+
+```{r agg_vel_head}
+head(velocity_clean)
+```
+
+---
+
+# Complex aggregation: aggregate
+
+Velocity comes with multiple measurements per location ID. `aggregate` is like a supersized `tapply` for computing statistics across different categories in a table.
+
+```{r aggregate}
+vel_agg = aggregate(vel_m_per_s ~ location_id, data = velocity_clean, FUN = mean, na.rm = TRUE)
+head(vel_agg)
+```
+
