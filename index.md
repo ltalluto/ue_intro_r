@@ -1,7 +1,7 @@
 **Instructors**: [Lauren Talluto](mailto:lauren.talluto@uibk.ac.at) (Group 0), Technikerstraße 25, Room 506 <br/>
 [Martin Dalvai Ragnoli](mailto:martin.dalvai@uibk.ac.at) (Group 1)
 
-
+ 
 **Meeting locations**:  
 Group 0: RR 18 <br/>
 Group 1: TBD
